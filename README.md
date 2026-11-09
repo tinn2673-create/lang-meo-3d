@@ -122,6 +122,40 @@
 
 ---
 
+## 📁 Cấu trúc tệp & Thư mục dự án (Project Architecture)
+
+Dự án được tổ chức theo cấu trúc **Clean & Zero-Bloat**, tối ưu hóa để tải tức thì chỉ với một request trên GitHub Pages mà không cần cấu trúc build tool phức tạp:
+
+```text
+lang-meo-3d/
+│
+├── 🌐 index.html                       # Toàn bộ mã nguồn cốt lõi (3D Three.js, Glassmorphism UI & Web Audio)
+├── 📚 README.md                         # Tài liệu giới thiệu tác phẩm, hướng dẫn điều khiển & Live Demo
+├── 🤖 AGENTS.md                         # Tiêu chuẩn kỹ thuật, phong cách Indie Night & checklist kiểm thử
+├── 🚫 .gitignore                        # Cấu hình bỏ qua tệp tạm, cache hệ điều hành
+│
+├── ⚙️ .github/
+│   └── workflows/
+│       └── deploy.yml                  # Tự động hóa CI/CD build & deploy website lên GitHub Pages
+│
+└── 🧠 .agents/
+    └── skills/
+        └── website-3d-design/
+            └── SKILL.md                # Bộ tri thức thiết kế 3D chuyên sâu, tọa độ làng đảo & hệ màu chuẩn
+```
+
+### 📋 Bảng phân loại & Vai trò các tệp:
+
+| Biểu tượng | Tên tệp / Thư mục | Định dạng | Vai trò & Nội dung chi tiết |
+| :---: | :--- | :---: | :--- |
+| 🌐 | **`index.html`** | Web App Core | **Trái tim của dự án:** Chứa toàn bộ cảnh 3D WebGL, 16+ công trình diorama làng mèo, hệ thống 4 phương tiện (Đi bộ, Xe đạp, Ván trượt, Siêu xe), âm thanh tổng hợp đa âm và giao diện Glassmorphism. |
+| 📚 | **`README.md`** | Documentation | **Bộ mặt của kho lưu trữ:** Trình bày mô tả tác phẩm, ảnh/huy hiệu, liên kết Live Demo, bảng hướng dẫn phím tắt và kiến trúc hệ thống. |
+| 🤖 | **`AGENTS.md`** | AI Standards | **Quy chuẩn lập trình:** 6 nguyên tắc cốt lõi, bảng 10 hạng mục kiểm thử (Test Matrix) và định hướng nghệ thuật Cozy Indie Cinematic Night. |
+| ⚙️ | **`.github/workflows/deploy.yml`** | GitHub Actions | **Tự động hóa CI/CD:** Kích hoạt triển khai tức thì lên GitHub Pages mỗi khi cập nhật nhánh `main`. |
+| 🧠 | **`.agents/skills/.../SKILL.md`** | Design Skill | **Bộ quy tắc thiết kế 3D:** Lưu trữ toàn bộ thông số tọa độ, kích thước công trình, rigging mèo chibi và bảng màu Dreamy Purple & Blue. |
+
+---
+
 ## 🛠️ Công nghệ & Tối ưu mượt mà
 
 * **Three.js (r128)**: Render 3D WebGL với PCFSoftShadowMap đổ bóng mềm mại, vật liệu MeshStandardMaterial chi tiết.
