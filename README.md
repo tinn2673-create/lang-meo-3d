@@ -56,15 +56,20 @@
 
 ### 🏞️ Ngôi làng trên đảo bay (Floating Island Diorama):
 1. **Biệt thự TT Trung Tín (Main Villa):** Nhà gỗ 2 tầng phong cách châu Âu, móng đá kiên cố, mái ngói xanh tím, ống khói bốc khói nhẹ, cửa sổ sáng đèn ấm áp, bồn hoa rực rỡ và biển hiệu vương miện TT phát sáng.
-2. **Gara & Sân thượng thư giãn:** Có siêu xe thể thao, sân thượng có bàn ghế và dù che nắng; biển quảng cáo hologram mèo phát sáng `</>`.
-3. **Drone giao hàng (Delivery Drone):** Quadcopter 4 cánh quạt quay tít bay lượn trên bầu trời, chở thùng hàng gỗ.
-4. **Cổng không gian Stargate (Magic Portal):** Vòng đá cổ ngữ với lốc xoáy năng lượng xanh phát sáng kỳ ảo. **Đặc biệt:** Bạn có thể điều khiển chú mèo (dù đang đi bộ, đạp xe hay lái xe) bước vào cổng để **dịch chuyển tức thời** sang bên kia hòn đảo!
-5. **Thác nước & Hồ cá chép:** Vách đá có dòng thác đổ xuống hồ nước trong xanh, hoa súng bập bềnh và cá chép vàng nhảy vọt lên mặt nước.
-6. **Tháp quan sát thiên văn:** Tháp đá cổ kính có mái vòm xanh và kính viễn vọng hướng lên các vì sao.
-7. **Cối xay gió & Guồng nước:** Cánh quạt cối xay gió khổng lồ và bánh xe nước quay đều bên dòng suối.
-8. **Cây hoa anh đào (Sakura) & Hiệu ứng thời tiết:** Cây hoa anh đào rực rỡ với hàng trăm cánh hoa hồng rơi lững lờ theo gió cùng đàn đom đóm phát sáng về đêm.
-9. **Chuyển đổi Ngày / Đêm:** Bấm nút **🌙 Đêm / ☀️ Ngày** để chiêm ngưỡng làng trong ánh nắng ấm ban ngày hoặc ánh neon lung linh về đêm.
-10. **Chụp ảnh Full HD (Photo Mode):** Bấm nút **📸 Chụp ảnh** góc trên để chụp và tải ngay bức ảnh 3D tuyệt đẹp về máy tính hoặc điện thoại!
+2. **Tiệm Bánh & Cà Phê Mèo (Meow Cafe & Bakery):** Nhà phong cách cottage ấm cúng với mái hiên sọc đỏ trắng, cửa vòm kính trưng bày bánh ngọt phát sáng, biển hiệu `🐾 MEOW CAFE & BAKERY`, bàn ghế ngoài trời có ô che và chiếc xe tay ga retro hồng xinh xắn.
+3. **Quầy Hàng Chợ Quê (Village Market Stall):** Quầy gỗ mộc có mái che sọc vàng xanh, các hòm gỗ đựng táo đỏ, cam vàng, cá tươi cho mèo, bảng phấn `100% ORGANIC` và đèn lồng ấm cúng.
+4. **Cầu Đá Vòm Cổ (Arched Stone Bridge):** Cây cầu đá uốn cong bắc qua con suối hoa đào với lan can chạm khắc, đèn lồng treo lơ lửng và cờ biểu tượng chân mèo.
+5. **Gara & Sân thượng thư giãn:** Có siêu xe thể thao, sân thượng có bàn ghế và dù che nắng; biển quảng cáo hologram mèo phát sáng `</>`.
+6. **Robot Mèo AI Trợ Lý Mini (Bip-Bip 🤖):** Chú robot tròn vo bay lơ lửng trên không, có 2 tai mèo ăng-ten phát sáng và màn hình hiển thị biểu cảm mèo điện tử `(^•ω•^)`, luôn bay lượn hộ tống người chơi.
+7. **Đồ vật & Đồ chơi làng mèo:** Hệ thống cột đèn đường Victoria thắp sáng ban đêm, ghế băng công viên thư giãn, cây cào móng mèo 3 tầng có chuột đồ chơi treo đung đưa, và chiếc ổ đệm tai mèo nơ hồng có chú mèo con đang ngủ say `💤`.
+8. **Drone giao hàng (Delivery Drone):** Quadcopter 4 cánh quạt quay tít bay lượn trên bầu trời, chở thùng hàng gỗ.
+9. **Cổng không gian Stargate (Magic Portal):** Vòng đá cổ ngữ với lốc xoáy năng lượng xanh phát sáng kỳ ảo. **Đặc biệt:** Bạn có thể điều khiển chú mèo (dù đang đi bộ, đạp xe hay lái xe) bước vào cổng để **dịch chuyển tức thời** sang bên kia hòn đảo!
+10. **Thác nước & Hồ cá chép:** Vách đá có dòng thác đổ xuống hồ nước trong xanh, hoa súng bập bềnh và cá chép vàng nhảy vọt lên mặt nước.
+11. **Tháp quan sát thiên văn:** Tháp đá cổ kính có mái vòm xanh và kính viễn vọng hướng lên các vì sao.
+12. **Cối xay gió & Guồng nước:** Cánh quạt cối xay gió khổng lồ và bánh xe nước quay đều bên dòng suối.
+13. **Cây hoa anh đào (Sakura) & Hiệu ứng thời tiết:** Cây hoa anh đào rực rỡ với hàng trăm cánh hoa hồng rơi lững lờ theo gió cùng đàn đom đóm phát sáng về đêm.
+14. **Chuyển đổi Ngày / Đêm:** Bấm nút **🌙 Đêm / ☀️ Ngày** để chiêm ngưỡng làng trong ánh nắng ấm ban ngày hoặc ánh neon lung linh về đêm.
+15. **Chụp ảnh Full HD (Photo Mode):** Bấm nút **📸 Chụp ảnh** góc trên để chụp và tải ngay bức ảnh 3D tuyệt đẹp về máy tính hoặc điện thoại!
 
 ---
 
@@ -72,7 +77,8 @@
 
 ### 🖥️ Trên Máy tính / Laptop:
 * **W / A / S / D** hoặc **Phím Mũi tên**: Di chuyển (Đi bộ / Đạp xe / Lái xe) - hỗ trợ trượt tường êm ái.
-* **Phím V** hoặc **F**: Đổi phương tiện (**Đi bộ 🚶** $\rightarrow$ **Xe đạp 🚲** $\rightarrow$ **Ván trượt 🛹** $\rightarrow$ **Siêu xe 🏎️**).
+* **Phím 1, 2, 3, 4**: Đổi phương tiện tức thì (**1: Đi bộ 🚶**, **2: Xe đạp 🚲**, **3: Ván trượt 🛹**, **4: Siêu xe 🏎️**).
+* **Phím V** hoặc **F**: Đổi lần lượt các phương tiện.
 * **Phím B**: Rung chuông xe đạp `Kính coong 🔔` hoặc bấm còi xe `Bíp bíp 📢`.
 * **Giữ Shift**: Tăng tốc / Chạy nước rút (lướt vù vù cực nhanh).
 * **Phím Space (Phím cách)**: Nhảy cao (bật cả xe lên qua chướng ngại vật).

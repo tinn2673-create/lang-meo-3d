@@ -521,7 +521,10 @@ button.on {
     <button id="v1">🏠 Biệt thự</button>
     <button id="v2">🐾 Cận mèo</button>
     <button id="v3">🚗 Đường phố</button>
-    <button id="v4">🌀 Cổng sao & hồ</button>
+    <button id="v4">🌀 Cổng sao</button>
+    <button id="v5">☕ Tiệm Cafe</button>
+    <button id="v6">🏪 Quầy Chợ</button>
+    <button id="v7">🌉 Cầu Đá</button>
     <button id="mus">🎵 Nhạc: Tắt</button>
   </div>
 </div>
@@ -853,24 +856,369 @@ function buildVilla() {
 }
 buildVilla();
 
-function simpleHouse(x, z, ry, w, d, h, wall, rc, awning = false) {
+
+/* ====================================================================
+   2.1. TIỆM BÁNH & CÀ PHÊ MÈO CHIBI (Cat Cafe & Cozy Bakery)
+==================================================================== */
+function buildCatCafe(x, z, ry) {
   const g = grp(x, 0, z, ry);
+  const w = 6.4, d = 5.2, h = 3.6;
+
+  // Stone base & timber frame walls
   bx(g, w + 0.6, 0.35, d + 0.6, 0x75758c, 0, 0.18, 0);
-  bx(g, w, h, d, wall, 0, 0.35 + h / 2, 0);
-  roof(g, w + 1, d + 1, h * 0.55, rc, 0, 0.35 + h, 0);
-  const wn = GLW(0xffd578);
-  add(g, new T.PlaneGeometry(0.85, 1.0), wn, -w * 0.25, 1.5, d / 2 + 0.03);
-  add(g, new T.PlaneGeometry(0.85, 1.0), wn, w * 0.25, 1.5, d / 2 + 0.03);
-  glow(g, 0, 1.5, d / 2 + 0.3, 0xffb84d, 2);
-  bx(g, 1.0, 1.7, 0.1, 0x5a361e, 0, 1.1, d / 2 + 0.05);
-  if (awning) {
-    for (let i = 0; i < 8; i++) {
-      bx(g, w / 8, 0.1, 1.2, (i % 2 ? 0xffffff : 0xe03a5a), -w / 2 + w / 16 + i * w / 8, 2.7, d / 2 + 0.7).rotation.x = 0.25;
+  bx(g, w, h, d, 0xf7ede2, 0, 0.35 + h / 2, 0, true);
+
+  // Timber corner posts & beams
+  [-1, 1].forEach(a => [-1, 1].forEach(b => bx(g, 0.25, h, 0.25, 0x5a361e, a * w / 2, 0.35 + h / 2, b * d / 2)));
+  bx(g, w + 0.1, 0.18, d + 0.1, 0x5a361e, 0, 0.35 + h * 0.55, 0);
+
+  // Terracotta roof
+  roof(g, w + 1.2, d + 1.2, 2.2, 0xc44536, 0, 0.35 + h, 0);
+
+  // Front Arched Wooden Door with Brass Handle
+  bx(g, 1.25, 2.2, 0.14, 0x5a361e, -0.2, 1.3, d / 2 + 0.08);
+  sp(g, 0.06, M(0xffd700, 0, 0, 0.2, 0.9), 0.28, 1.3, d / 2 + 0.18); // brass knob
+
+  // Warm glowing bakery display windows
+  const winGlow = GLW(0xffdf80);
+  [-2.0, 1.8].forEach(wx => {
+    bx(g, 1.5, 1.4, 0.12, 0x4a2c17, wx, 1.8, d / 2 + 0.06);
+    add(g, new T.PlaneGeometry(1.3, 1.2), winGlow, wx, 1.8, d / 2 + 0.13);
+    // Flower Planter Box under window
+    bx(g, 1.55, 0.22, 0.3, 0x3e2311, wx, 0.95, d / 2 + 0.22);
+    for (let f = -0.55; f <= 0.55; f += 0.26) {
+      sp(g, 0.1, (f < 0 ? 0xff4fa8 : 0xffcf4d), wx + f, 1.15, d / 2 + 0.22);
     }
+  });
+  glow(g, -0.2, 1.8, d / 2 + 0.5, 0xffb84d, 3.5);
+
+  // Striped Cafe Awning (Red & Cream)
+  for (let i = 0; i < 10; i++) {
+    const aw = bx(g, (w - 0.4) / 10, 0.08, 1.4, (i % 2 ? 0xffffff : 0xe63946), -w / 2 + 0.4 + i * (w - 0.4) / 10, 2.8, d / 2 + 0.8);
+    aw.rotation.x = 0.24;
   }
+
+  // Cafe Signboard: "🐾 MEOW CAFE & BAKERY"
+  (() => {
+    const tx = cvText(256, 96, ctx => {
+      ctx.fillStyle = '#3a2010';
+      ctx.fillRect(0, 0, 256, 96);
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(4, 4, 248, 88);
+      ctx.fillStyle = '#ff8fc8';
+      ctx.font = '28px serif';
+      ctx.fillText('🐾', 20, 56);
+      ctx.fillText('🐾', 210, 56);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 26px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('MEOW CAFE', 128, 45);
+      ctx.font = '15px system-ui';
+      ctx.fillStyle = '#ffd700';
+      ctx.fillText('& BAKERY ☕', 128, 74);
+    });
+    add(g, new T.PlaneGeometry(2.8, 1.0), new T.MeshBasicMaterial({ map: tx }), 0, 3.5, d / 2 + 0.12);
+  })();
+
+  // Outdoor Bistro Table & Parasol Umbrella
+  const tb = grp(2.6, 0, d / 2 + 1.8);
+  g.add(tb);
+  cy(tb, 0.7, 0.06, 0x8b5a2b, 0, 0.85, 0); // tabletop
+  cy(tb, 0.05, 0.85, 0x444455, 0, 0.42, 0); // leg
+  cy(tb, 0.04, 2.2, 0x5a361e, 0, 1.8, 0); // umbrella pole
+  add(tb, new T.ConeGeometry(1.35, 0.55, 12), M(0xff4fa8), 0, 2.8, 0); // pink striped umbrella
+
+  // Bistro Chairs
+  [-0.9, 0.9].forEach(cx => {
+    bx(tb, 0.45, 0.06, 0.45, 0x8b5a2b, cx, 0.5, 0);
+    cy(tb, 0.03, 0.5, 0x444455, cx, 0.25, 0);
+    bx(tb, 0.45, 0.45, 0.05, 0x8b5a2b, cx, 0.8, -0.2); // backrest
+  });
+
+  // Parked Retro Pink Scooter in front of Cafe
+  const sc = grp(-2.6, 0, d / 2 + 1.5, 0.4);
+  g.add(sc);
+  bx(sc, 0.55, 0.4, 1.4, 0xff5fa8, 0, 0.45, 0); // pink body
+  bx(sc, 0.48, 0.15, 0.75, 0xf5f5f5, 0, 0.68, -0.15); // white seat
+  cy(sc, 0.22, 0.15, 0x16161c, 0, 0.25, 0.55).rotation.z = Math.PI / 2; // front wheel
+  cy(sc, 0.22, 0.15, 0x16161c, 0, 0.25, -0.55).rotation.z = Math.PI / 2; // rear wheel
+  sp(sc, 0.12, GLW(0xffffff), 0, 0.75, 0.6); // headlight
+  cy(sc, 0.03, 0.65, 0xd4d4dc, 0, 0.9, 0.35); // handlebar stem
+  bx(sc, 0.75, 0.04, 0.04, 0xd4d4dc, 0, 1.2, 0.35); // handlebars
+
+  return g;
 }
-simpleHouse(-19, -4, 0.5, 5, 4.2, 3.2, 0xe8cdb8, 0xc43a4a);
-simpleHouse(19, -4, -0.5, 5.5, 4.2, 3.4, 0xf0dcc8, 0x2c3fa8, true);
+buildCatCafe(-18.5, -4.5, 0.45);
+
+/* ====================================================================
+   2.2. QUẦY HÀNG CHỢ QUÊ NÔNG SẢN & HẢI SẢN (Village Market Stall)
+==================================================================== */
+function buildMarketStall(x, z, ry) {
+  const g = grp(x, 0, z, ry);
+  const w = 4.8, d = 2.6;
+
+  // Sturdy Timber Corner Posts
+  [[-w / 2 + 0.2, -d / 2 + 0.2], [w / 2 - 0.2, -d / 2 + 0.2], [-w / 2 + 0.2, d / 2 - 0.2], [w / 2 - 0.2, d / 2 - 0.2]].forEach(p => {
+    cy(g, 0.08, 2.9, 0x6b4528, p[0], 1.45, p[1]);
+  });
+
+  // Wooden Counter & Stone Base
+  bx(g, w + 0.3, 0.35, d + 0.3, 0x75758c, 0, 0.18, 0);
+  bx(g, w, 0.85, d, 0x8b5a2b, 0, 0.75, 0);
+
+  // Striped Fabric Canopy Roof (Blue & Gold)
+  for (let i = 0; i < 8; i++) {
+    const slat = bx(g, w / 8, 0.08, d + 0.6, (i % 2 ? 0x2563eb : 0xffd166), -w / 2 + w / 16 + i * w / 8, 3.0, 0);
+    slat.rotation.x = 0.12;
+  }
+
+  // Crates of Farm & Fish Goods
+  // Crate 1: Shiny Red Apples
+  bx(g, 0.9, 0.3, 0.7, 0xa16207, -1.3, 1.3, 0.2);
+  for (let a = -0.3; a <= 0.3; a += 0.2) {
+    sp(g, 0.09, 0xef4444, -1.3 + a, 1.5, 0.2);
+  }
+  // Crate 2: Golden Oranges
+  bx(g, 0.9, 0.3, 0.7, 0xa16207, 0, 1.3, 0.2);
+  for (let a = -0.3; a <= 0.3; a += 0.2) {
+    sp(g, 0.09, 0xf59e0b, a, 1.5, 0.2);
+  }
+  // Crate 3: Fresh Fish for Cats
+  bx(g, 0.9, 0.3, 0.7, 0xa16207, 1.3, 1.3, 0.2);
+  [-0.2, 0.2].forEach(fx => {
+    sp(g, 0.12, 0x60a5fa, 1.3 + fx, 1.5, 0.2, 1.5, 0.6, 0.4);
+  });
+
+  // Chalkboard Price Sign
+  const chalkSign = cvText(128, 96, ctx => {
+    ctx.fillStyle = '#1e1b4b';
+    ctx.fillRect(0, 0, 128, 96);
+    ctx.strokeStyle = '#8b5a2b';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(3, 3, 122, 90);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 15px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('🐟 CÁ TƯƠI', 64, 38);
+    ctx.fillStyle = '#ffd166';
+    ctx.fillText('100% ORGANIC', 64, 68);
+  });
+  add(g, new T.PlaneGeometry(0.85, 0.65), new T.MeshBasicMaterial({ map: chalkSign }), 0, 0.75, d / 2 + 0.05);
+
+  // Warm Lanterns hanging under canopy
+  [-1.4, 1.4].forEach(lx => {
+    sp(g, 0.14, GLW(0xffd166), lx, 2.5, d / 2 + 0.1);
+    glow(g, lx, 2.5, d / 2 + 0.1, 0xffb84d, 1.8);
+  });
+
+  // Stack of wooden barrels & crates nearby
+  cy(g, 0.45, 0.9, 0x6b4528, -2.8, 0.45, 0.4);
+  cy(g, 0.4, 0.8, 0x6b4528, -2.4, 0.4, 1.2);
+  bx(g, 0.8, 0.7, 0.8, 0xa16207, 2.7, 0.35, 0.5);
+
+  return g;
+}
+buildMarketStall(19.0, -4.5, -0.45);
+
+/* ====================================================================
+   2.3. CẦU ĐÁ VÒM CỔ ĐIỂN QUA SUỐI (Arched Stone Bridge)
+==================================================================== */
+function buildStoneBridge(x, z, ry) {
+  const g = grp(x, 0, z, ry);
+
+  // Arched Cobblestone Span
+  const deck = bx(g, 3.4, 0.45, 6.2, 0x828294, 0, 1.1, 0);
+  // Stepped ramp slopes at ends
+  const rampF = bx(g, 3.4, 0.35, 2.0, 0x828294, 0, 0.55, 3.6); rampF.rotation.x = -0.25;
+  const rampB = bx(g, 3.4, 0.35, 2.0, 0x828294, 0, 0.55, -3.6); rampB.rotation.x = 0.25;
+
+  // Stone Balustrade & Railings
+  [-1.6, 1.6].forEach(side => {
+    // Top handrail
+    bx(g, 0.25, 0.2, 6.2, 0x606075, side, 1.8, 0);
+    // Stone baluster pillars
+    for (let pz = -2.8; pz <= 2.8; pz += 1.4) {
+      cy(g, 0.14, 0.65, 0x6e6e88, side, 1.45, pz);
+    }
+  });
+
+  // Hanging Wrought-Iron Lantern in center of bridge
+  sp(g, 0.16, GLW(0xffd166), 0, 2.5, 0);
+  glow(g, 0, 2.5, 0, 0xffb84d, 2.8);
+
+  // Cat Paw Banner on bridge side
+  const btx = cvText(96, 128, ctx => {
+    ctx.fillStyle = '#2563eb';
+    ctx.fillRect(0, 0, 96, 128);
+    ctx.fillStyle = '#fff';
+    ctx.font = '40px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🐾', 48, 70);
+  });
+  add(g, new T.PlaneGeometry(0.8, 1.1), new T.MeshBasicMaterial({ map: btx, side: T.DoubleSide }), 1.76, 1.1, 0);
+
+  return g;
+}
+buildStoneBridge(-10.5, 7.8, 0.25);
+
+/* ====================================================================
+   2.4. ĐỒ VẬT & TRANG TRÍ ĐƯỜNG PHỐ LÀNG MÈO (Props & Street Furniture)
+==================================================================== */
+function buildVillageProps() {
+  // 1. Victorian Street Lamps (Cột đèn đường cổ điển)
+  const lampPositions = [
+    [-8, -1.8], [0, -1.8], [9, -1.8],
+    [-14, 4.5], [14, 4.5],
+    [-8, 14.5], [8, 14.5]
+  ];
+  lampPositions.forEach(([lx, lz]) => {
+    const lg = grp(lx, 0, lz);
+    cy(lg, 0.18, 0.45, 0x22222e, 0, 0.22, 0); // ornate base
+    cy(lg, 0.06, 3.2, 0x333344, 0, 1.8, 0); // pole
+    bx(lg, 0.42, 0.55, 0.42, 0x22222e, 0, 3.4, 0); // lantern housing
+    sp(lg, 0.16, GLW(0xffec99), 0, 3.4, 0); // glowing bulb
+    glow(lg, 0, 3.4, 0, 0xffd54f, 3.2);
+  });
+
+  // 2. Wooden Park Benches (Ghế băng công viên)
+  const benchPositions = [
+    [-5.5, 1.8, 0],
+    [5.0, 1.8, 0],
+    [-14.5, 12.0, 0.8]
+  ];
+  benchPositions.forEach(([bxPos, bzPos, bry]) => {
+    const bg = grp(bxPos, 0, bzPos, bry);
+    [-0.7, 0.7].forEach(legX => {
+      bx(bg, 0.08, 0.55, 0.55, 0x22222e, legX, 0.28, 0);
+      bx(bg, 0.08, 0.55, 0.08, 0x22222e, legX, 0.65, -0.25); // back support
+    });
+    // Wooden slats for seat & backrest
+    bx(bg, 1.65, 0.06, 0.5, 0x8b5a2b, 0, 0.52, 0);
+    bx(bg, 1.65, 0.35, 0.06, 0x8b5a2b, 0, 0.82, -0.24);
+  });
+
+  // 3. Cat Scratching Post & Climbing Tree (Trụ cào móng & Cây chơi mèo)
+  (() => {
+    const ctg = grp(-2.8, 0, 2.2);
+    // Base platform
+    bx(ctg, 1.4, 0.12, 1.4, 0x5a361e, 0, 0.06, 0);
+    // Main sisal rope trunk
+    cy(ctg, 0.14, 2.4, 0xd4a373, 0, 1.2, 0);
+    // Perching platforms
+    cy(ctg, 0.45, 0.08, 0xfaedcd, -0.4, 0.9, 0);
+    cy(ctg, 0.45, 0.08, 0xfaedcd, 0.4, 1.6, 0);
+    cy(ctg, 0.55, 0.08, 0xfaedcd, 0, 2.35, 0);
+    // Dangling mouse toy on string
+    cy(ctg, 0.015, 0.55, 0xdddddd, 0.35, 2.05, 0);
+    sp(ctg, 0.08, M(0xff4fa8), 0.35, 1.75, 0);
+  })();
+
+  // 4. Cute Cat Bed Igloo with Sleeping Kitten (Ổ mèo tai mèo nơ hồng)
+  (() => {
+    const cbg = grp(-1.2, 0, -1.8, 0.2);
+    // Igloo dome
+    add(cbg, new T.SphereGeometry(0.75, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.7), M(0xffccd5), 0, 0.4, 0);
+    // Cat ears on bed
+    [-0.32, 0.32].forEach(ex => {
+      const ear = add(cbg, new T.ConeGeometry(0.18, 0.35, 4), M(0xff758f), ex, 0.95, 0);
+      ear.rotation.z = -Math.sign(ex) * 0.3;
+    });
+    // Pink Bow in middle
+    sp(cbg, 0.09, M(0xff4d6d), -0.08, 0.92, 0.2, 1.4, 0.8, 0.5);
+    sp(cbg, 0.09, M(0xff4d6d), 0.08, 0.92, 0.2, 1.4, 0.8, 0.5);
+    // Cute sleeping baby kitten curled up inside
+    const sleepCat = grp(0, 0.22, 0.05);
+    cbg.add(sleepCat);
+    sp(sleepCat, 0.24, M(0xffffff), 0, 0, 0, 1.3, 0.85, 1.0); // body
+    sp(sleepCat, 0.18, M(0xffffff), 0.16, 0.1, 0.15); // head
+    // Soft breathing animation
+    anim.push(t => {
+      sleepCat.scale.y = 1.0 + Math.sin(t * 2.2) * 0.06;
+    });
+  })();
+
+  // 5. Chalkboard Street Directory A-Board
+  (() => {
+    const ag = grp(2.8, 0, -1.6, -0.3);
+    const tx = cvText(128, 128, ctx => {
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(0, 0, 128, 128);
+      ctx.strokeStyle = '#8b5a2b';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(3, 3, 122, 122);
+      ctx.fillStyle = '#ff8fc8';
+      ctx.font = 'bold 22px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('🐾 LÀNG 3D', 64, 38);
+      ctx.fillStyle = '#fff';
+      ctx.font = '14px system-ui';
+      ctx.fillText('⬅️ Cafe Mèo', 64, 65);
+      ctx.fillText('Chợ Cá ➡️', 64, 88);
+      ctx.fillStyle = '#ffd166';
+      ctx.fillText('🏁 Đường Đua 🏎️', 64, 110);
+    });
+    const s1 = add(ag, new T.PlaneGeometry(0.9, 1.1), new T.MeshBasicMaterial({ map: tx, side: T.DoubleSide }), 0, 0.6, 0.2);
+    s1.rotation.x = -0.22;
+    const s2 = add(ag, new T.PlaneGeometry(0.9, 1.1), new T.MeshBasicMaterial({ map: tx, side: T.DoubleSide }), 0, 0.6, -0.2);
+    s2.rotation.x = 0.22;
+  })();
+}
+buildVillageProps();
+
+/* ====================================================================
+   2.5. ROBOT MÈO AI TRỢ LÝ MINI BAY LƯỢN (Mini AI Companion Bot 🤖)
+==================================================================== */
+function buildMiniAiBot() {
+  const bot = new T.Group();
+  bot.position.set(-3.5, 3.2, 0);
+  S.add(bot);
+
+  // Spherical white robot body
+  sp(bot, 0.35, M(0xffffff, 0, 0, 0.2, 0.1), 0, 0, 0);
+  // Chrome waist ring
+  add(bot, new T.TorusGeometry(0.36, 0.03, 6, 20), M(0x4aa8ff, 0x4aa8ff, 0.8)).rotation.x = Math.PI / 2;
+
+  // Cat Ear Antennas
+  [-0.18, 0.18].forEach(ax => {
+    cy(bot, 0.03, 0.22, 0xd4d4dc, ax, 0.42, 0).rotation.z = -Math.sign(ax) * 0.3;
+    sp(bot, 0.05, GLW(0x38bdf8), ax * 1.35, 0.52, 0);
+  });
+
+  // Glowing Cat Face Screen
+  const faceTx = cvText(128, 128, ctx => {
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, 128, 128);
+    ctx.fillStyle = '#38bdf8';
+    ctx.shadowColor = '#0ea5e9';
+    ctx.shadowBlur = 12;
+    ctx.font = 'bold 36px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('(^•ω•^)', 64, 74);
+  });
+  add(bot, new T.PlaneGeometry(0.42, 0.38), new T.MeshBasicMaterial({ map: faceTx }), 0, 0.04, 0.34);
+
+  // Little Jet Thruster at bottom
+  cy(bot, 0.12, 0.15, 0x475569, 0, -0.36, 0);
+  sp(bot, 0.1, GLW(0x38bdf8), 0, -0.46, 0);
+  glow(bot, 0, -0.46, 0, 0x38bdf8, 1.5);
+
+  // Playful orbital bobbing around the player cat
+  anim.push((t, dt) => {
+    const leader = catsState[PL.act] || catsState[0];
+    const targetX = leader.x + Math.sin(t * 1.2) * 2.2;
+    const targetY = (leader.st ? leader.st.py : 0) + 2.8 + Math.sin(t * 3.0) * 0.25;
+    const targetZ = leader.z + Math.cos(t * 1.2) * 2.2;
+
+    bot.position.x += (targetX - bot.position.x) * dt * 3.5;
+    bot.position.y += (targetY - bot.position.y) * dt * 3.5;
+    bot.position.z += (targetZ - bot.position.z) * dt * 3.5;
+    bot.rotation.y = t * 1.2 + Math.PI / 2;
+    bot.rotation.z = Math.sin(t * 2.5) * 0.12;
+  });
+}
+buildMiniAiBot();
+
 
 // Garage + Rooftop Terrace
 const garageGrp = grp(7.0, 0, -8.5);
@@ -1634,7 +1982,10 @@ const CAM_VIEWS = {
   v1: [-2, 3, -4, 58, 0.45, 0.3],
   v2: [-4.0, 2.0, -4.0, 14, 0.25, 0.1],
   v3: [0, 1, 9, 32, 0.4, 0],
-  v4: [16, 2, 4, 24, 0.32, -0.6]
+  v4: [16, 2, 4, 24, 0.32, -0.6],
+  v5: [-18.5, 2.2, -4.5, 16, 0.28, 0.4],
+  v6: [19.0, 2.0, -4.5, 16, 0.28, -0.4],
+  v7: [-10.5, 2.0, 7.8, 16, 0.26, 0.1]
 };
 Object.keys(CAM_VIEWS).forEach(k => {
   $('#' + k).onclick = () => {
@@ -1697,10 +2048,10 @@ const PL = { on: true, act: 0, jv: { x: 0, y: 0 }, jr: false, jq: false };
 const K = {};
 
 const BOXES = [
-  [-11.5, 1.5, -13.0, -5.0],
-  [4.0, 10.5, -12.0, -5.5],
-  [-22.5, -15.5, -7.0, -1.0],
-  [15.5, 22.5, -7.0, -1.0]
+  [-11.5, 1.5, -13.0, -5.0],   // Villa
+  [4.0, 10.5, -12.0, -5.5],    // Garage
+  [-22.5, -14.5, -7.5, -1.5],  // Cat Cafe & Bakery
+  [16.0, 22.5, -6.5, -2.0]     // Village Market Stall
 ];
 
 const RIDE_TYPES = ['walk', 'bike', 'board', 'car'];
