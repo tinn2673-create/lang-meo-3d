@@ -515,7 +515,7 @@ button.on {
   </div>
   <div class="row" id="clips"></div>
   <div class="row">
-    <button id="pm">🎮 Chơi mèo</button>
+    <button id="pm" class="on">🛑 Dừng lái</button>
     <button id="sw">🔁 Đổi mèo (Tab)</button>
     <button id="rot" class="on">🔄 Tự xoay</button>
     <button id="v1">🏠 Biệt thự</button>
@@ -1223,20 +1223,24 @@ function createRideBicycle(isWhite) {
   [-0.4, 0.4].forEach(x => bx(bg, 0.1, 0.07, 0.07, 0x111116, x, 1.15, 0.68));
   sp(bg, 0.07, M(0xffd700, 0, 0, 0.2, 0.9), 0.2, 1.22, 0.68); // bell
 
-  // Front & Rear Wheels
+  // Front & Rear Wheels (Oriented along bicycle travel direction)
   const fWheel = new T.Group();
   fWheel.position.set(0, 0.45, 0.92);
   bg.add(fWheel);
-  add(fWheel, new T.TorusGeometry(0.45, 0.06, 8, 24), tireMat);
-  cy(fWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.z = Math.PI / 2;
-  cy(fWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.y = Math.PI / 2;
+  const fTire = add(fWheel, new T.TorusGeometry(0.45, 0.06, 8, 24), tireMat);
+  fTire.rotation.y = Math.PI / 2;
+  cy(fWheel, 0.015, 0.88, metalMat, 0, 0, 0); // vertical spoke
+  const fHSpoke = cy(fWheel, 0.015, 0.88, metalMat, 0, 0, 0);
+  fHSpoke.rotation.x = Math.PI / 2; // horizontal spoke
 
   const rWheel = new T.Group();
   rWheel.position.set(0, 0.45, -0.92);
   bg.add(rWheel);
-  add(rWheel, new T.TorusGeometry(0.45, 0.06, 8, 24), tireMat);
-  cy(rWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.z = Math.PI / 2;
-  cy(rWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.y = Math.PI / 2;
+  const rTire = add(rWheel, new T.TorusGeometry(0.45, 0.06, 8, 24), tireMat);
+  rTire.rotation.y = Math.PI / 2;
+  cy(rWheel, 0.015, 0.88, metalMat, 0, 0, 0); // vertical spoke
+  const rHSpoke = cy(rWheel, 0.015, 0.88, metalMat, 0, 0, 0);
+  rHSpoke.rotation.x = Math.PI / 2; // horizontal spoke
 
   // Crank & Pedals
   const crank = new T.Group();
@@ -1511,6 +1515,9 @@ function initAudio() {
     AU = new (window.AudioContext || window.webkitAudioContext)();
     setInterval(musicTick, 380);
   }
+  if (AU && AU.state === 'suspended') {
+    AU.resume();
+  }
 }
 
 function meow(pitch = 1.0) {
@@ -1631,6 +1638,7 @@ const CAM_VIEWS = {
 };
 Object.keys(CAM_VIEWS).forEach(k => {
   $('#' + k).onclick = () => {
+    if (k !== 'v2' && PL.on) setPlayMode(false);
     const v = CAM_VIEWS[k];
     goalLook.set(v[0], v[1], v[2]);
     goalCam.dist = v[3];
@@ -1685,7 +1693,7 @@ canvasEl.addEventListener('wheel', e => {
 /* ====================================================================
    10. VEHICLE SWITCHING & GAMEPLAY CONTROLS
 ==================================================================== */
-const PL = { on: false, act: 0, jv: { x: 0, y: 0 }, jr: false, jq: false };
+const PL = { on: true, act: 0, jv: { x: 0, y: 0 }, jr: false, jq: false };
 const K = {};
 
 const BOXES = [
@@ -1710,7 +1718,7 @@ function toggleCruise(force) {
     setPlayMode(true);
     // Calculate closest angle on elliptical road loop
     const relX = leader.x / RX;
-    const relZ = (leader.z - RC) / (RZ * 0.35);
+    const relZ = (leader.z - RC) / RZ;
     cruiseAngle = Math.atan2(relZ, relX);
     showBubble(leader, '🏁 Chạy quanh đường!');
     if (leader.ride === 'bike') ringBell();
@@ -1723,6 +1731,7 @@ const btnCruise = $('#btn-cruise');
 if (btnCruise) btnCruise.onclick = () => toggleCruise();
 
 function setVehicleMode(mode) {
+  setPlayMode(true);
   catsState.forEach(cs => {
     cs.ride = mode;
     cs.cat.bike.bg.visible = (mode === 'bike');
@@ -1730,7 +1739,7 @@ function setVehicleMode(mode) {
     cs.cat.car.g.visible = (mode === 'car');
   });
   document.querySelectorAll('#rides button[data-r]').forEach(btn => {
-    btn.classList.toggle('on', btn.dataset.r === mode);
+    btn.classList.toggle('on', btn.getAttribute('data-r') === mode);
   });
   const leader = catsState[PL.act];
   if (mode === 'bike') {
@@ -1794,7 +1803,7 @@ function controlPlayerCat(c, tg, dt) {
     c.x = p[0];
     c.z = p[1];
     const nextP = rp(cruiseAngle + 0.04, -0.35);
-    tg.yaw = -Math.atan2(nextP[1] - p[1], nextP[0] - p[0]);
+    tg.yaw = Math.atan2(nextP[0] - p[0], nextP[1] - p[1]);
     c.ph += dt * (run ? 18 : 12);
 
     // Smooth Third-Person Chase Camera
@@ -1818,21 +1827,21 @@ function controlPlayerCat(c, tg, dt) {
         tl: 0.4, hx: -0.15
       });
       tg.py = (c.jy || 0) + 0.2;
-      c.cat.g.rotation.z = -Math.sin(cruiseAngle) * 0.22; // banking into curve
+      tg.bz = -Math.sin(cruiseAngle) * 0.22;
     } else if (c.ride === 'board') {
       Object.assign(tg, { lx: -0.35, rx: 0.35, la: -0.4, ra: 0.4, laz: 0.55, raz: -0.55, tl: 0.6, hx: 0 });
       tg.py = (c.jy || 0) + 0.32 + Math.sin(elapsed * 5) * 0.05;
-      c.cat.g.rotation.z = -Math.sin(cruiseAngle) * 0.28;
+      tg.bz = -Math.sin(cruiseAngle) * 0.28;
     } else if (c.ride === 'car') {
       c.cat.car.wheels.forEach(w => w.rotation.x += curSpeed * dt * 4.0);
       Object.assign(tg, { lx: -0.9, rx: -0.9, la: -1.1, ra: -1.1, laz: 0.2, raz: -0.2, tl: 0.3, hx: 0 });
       tg.py = (c.jy || 0) + 0.18;
-      c.cat.g.rotation.z = -Math.sin(cruiseAngle) * 0.08;
+      tg.bz = -Math.sin(cruiseAngle) * 0.08;
     } else {
       const w = Math.sin(c.ph) * (run ? 1.1 : 0.75) * 0.95;
       Object.assign(tg, { lx: w, rx: -w, la: -w * 0.8, ra: w * 0.8, tl: run ? 0.6 : 0.3 });
       tg.py = (c.jy || 0) + Math.abs(Math.sin(c.ph)) * 0.08;
-      c.cat.g.rotation.z = 0;
+      tg.bz = 0;
     }
 
     // Bunny-hop jump while cruising
@@ -1882,7 +1891,7 @@ function controlPlayerCat(c, tg, dt) {
     if (!hitZ) c.z = nextZ;
 
     c.x = Math.max(-28, Math.min(28, c.x));
-    c.z = Math.max(-19, Math.min(25, c.z));
+    c.z = Math.max(-18.5, Math.min(21, c.z));
 
     tg.yaw = Math.atan2(mx, mz);
     c.ph += dt * (run ? 18 : 12);
@@ -1929,7 +1938,7 @@ function controlPlayerCat(c, tg, dt) {
       Object.assign(tg, { lx: -0.2, rx: 0.4, la: -1.0, ra: -1.0, laz: 0.32, raz: -0.32, hx: 0 });
     }
     tg.py = (c.jy || 0) + 0.2;
-    c.cat.g.rotation.z = isMoving ? -ix * 0.15 : 0; // bicycle banking
+    tg.bz = isMoving ? -ix * 0.15 : 0;
   } else if (c.ride === 'board') {
     // Hoverboard stance
     Object.assign(tg, {
@@ -1939,7 +1948,7 @@ function controlPlayerCat(c, tg, dt) {
       tl: 0.6, hx: 0
     });
     tg.py = (c.jy || 0) + 0.32 + Math.sin(elapsed * 5) * 0.05;
-    c.cat.g.rotation.z = isMoving ? -ix * 0.22 : 0;
+    tg.bz = isMoving ? -ix * 0.22 : 0;
   } else if (c.ride === 'car') {
     // Supercar driving pose
     if (isMoving) {
@@ -2000,16 +2009,17 @@ function showBubble(c, text) {
 
 function markPlayerIcon() {
   catsState.forEach(c => {
-    setCatClip(c, 'idle');
     if (PL.on && c.i === PL.act) {
       const ctx = c.cv.getContext('2d');
       ctx.clearRect(0, 0, 128, 128);
-      ctx.font = '85px serif';
+      ctx.font = '80px serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('🎮', 64, 70);
+      ctx.fillText('⭐', 64, 70);
       c.sprite.material.map.needsUpdate = true;
       c.sprite.visible = true;
+    } else {
+      c.sprite.visible = false;
     }
   });
 }
@@ -2018,6 +2028,11 @@ function setPlayMode(active) {
   PL.on = active;
   stopMovie();
   document.body.classList.toggle('play', active);
+  const pmBtn = $('#pm');
+  if (pmBtn) {
+    pmBtn.classList.toggle('on', active);
+    pmBtn.textContent = active ? '🛑 Dừng lái' : '🎮 Lái tự do';
+  }
   if (active) {
     autoRotate = false;
     $('#rot').classList.remove('on');
@@ -2035,10 +2050,17 @@ $('#sw').onclick = () => {
   showBubble(catsState[PL.act], '🐱 Đổi!');
 };
 
-// Keyboard listener
+// Keyboard listener with auto-play activation & number keys 1, 2, 3, 4
 addEventListener('keydown', e => {
   const k = e.key.toLowerCase();
   K[k] = true;
+  if (!PL.on && ['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' ','r','v','f','b','m','c','1','2','3','4'].includes(k)) {
+    setPlayMode(true);
+  }
+  if (k === '1') setVehicleMode('walk');
+  if (k === '2') setVehicleMode('bike');
+  if (k === '3') setVehicleMode('board');
+  if (k === '4') setVehicleMode('car');
   if (!PL.on) return;
   if (k === ' ') { PL.jq = true; e.preventDefault(); }
   if (k === 'tab') { e.preventDefault(); $('#sw').click(); }
@@ -2078,7 +2100,7 @@ $('#mb').onpointerdown = () => {
 /* ====================================================================
    11. ANIMATION CLIPS & CINEMATIC MOVIE
 ==================================================================== */
-const DEF_ST = { lx: 0, rx: 0, la: 0, ra: 0, laz: 0.12, raz: -0.12, py: 0, hx: 0, hy: 0, hz: 0, bx: 0, yaw: 0, tl: 0.2, lap: 0 };
+const DEF_ST = { lx: 0, rx: 0, la: 0, ra: 0, laz: 0.12, raz: -0.12, py: 0, hx: 0, hy: 0, hz: 0, bx: 0, bz: 0, yaw: 0, tl: 0.2, lap: 0 };
 
 const CLIPS = {
   idle: t => ({ laz: 0.12 + sn(t * 1.6) * 0.04, raz: -0.12 - sn(t * 1.6) * 0.04, hy: sn(t * 0.8) * 0.12 }),
@@ -2138,7 +2160,7 @@ Object.keys(CLIP_LABELS).forEach(k => {
 
 document.querySelectorAll('#who button').forEach(b => {
   b.onclick = () => {
-    selectedWho = +b.dataset.w;
+    selectedWho = +(b.getAttribute('data-w') || 0);
     document.querySelectorAll('#who button').forEach(x => x.classList.toggle('on', x === b));
   };
 });
@@ -2226,7 +2248,7 @@ function renderLoop(now) {
   }
 
   // Smooth camera interpolation
-  if (autoRotate && !dragPoint) goalCam.az += dt * 0.08;
+  if (autoRotate && !dragPoint && !PL.on && !moviePlaying) goalCam.az += dt * 0.08;
   const dampK = 1 - Math.exp(-9 * dt);
   curCam.az += (goalCam.az - curCam.az) * dampK;
   curCam.pl += (goalCam.pl - curCam.pl) * dampK;
@@ -2256,6 +2278,7 @@ function renderLoop(now) {
     if (isPlayerControlled) {
       controlPlayerCat(c, targetState, dt);
     } else if (distToGoal > 0.15) {
+      let spd = 6.0;
       if (cruiseMode) {
         // Companion cat cruises on outer lane slightly behind leader
         const compAngle = cruiseAngle - 0.28;
@@ -2263,11 +2286,15 @@ function renderLoop(now) {
         c.x = pComp[0];
         c.z = pComp[1];
         const nextComp = rp(compAngle + 0.04, 0.42);
-        targetState.yaw = -Math.atan2(nextComp[1] - pComp[1], nextComp[0] - pComp[0]);
+        targetState.yaw = Math.atan2(nextComp[0] - pComp[0], nextComp[1] - pComp[1]);
+        spd = 12.0;
         c.ph += dt * 16;
+        if (c.ride === 'bike') targetState.bz = -Math.sin(compAngle) * 0.22;
+        else if (c.ride === 'board') targetState.bz = -Math.sin(compAngle) * 0.28;
+        else targetState.bz = 0;
       } else {
         const isFar = distToGoal > 4.5;
-        let spd = (isFar ? 8.5 : 4.5);
+        spd = (isFar ? 8.5 : 4.5);
         if (c.ride === 'bike') spd = (isFar ? 12.0 : 7.5);
         else if (c.ride === 'board') spd = (isFar ? 13.5 : 8.5);
         else if (c.ride === 'car') spd = (isFar ? 16.5 : 10.5);
@@ -2277,6 +2304,7 @@ function renderLoop(now) {
         c.z += (dz / distToGoal) * step;
         c.ph += dt * (isFar ? 18 : 12);
         targetState.yaw = Math.atan2(dx, dz);
+        targetState.bz = 0;
       }
 
       // Follower vehicle animation
@@ -2345,7 +2373,7 @@ function renderLoop(now) {
     cat.arms[1].rotation.z = s.raz;
     cat.head.rotation.set(s.hx, s.hy, s.hz);
     cat.g.position.set(c.x, s.py * 0.85, c.z);
-    cat.g.rotation.set(s.bx, s.yaw, 0);
+    cat.g.rotation.set(s.bx, s.yaw, s.bz || 0);
 
     cat.tail.forEach((seg, j) => {
       seg.rotation.z = sn(elapsed * 3.2 - j * 0.7 + idx) * (0.14 + s.tl * 0.45);
