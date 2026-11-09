@@ -623,9 +623,9 @@ R.shadowMap.enabled = true;
 R.shadowMap.type = T.PCFShadowMap;
 
 const S = new T.Scene();
-const skyNight = 0x0c0926, skyDay = 0x82b4ff;
+const skyNight = 0x0c0926, skyDay = 0x82b4ff, skySunset = 0xff8c69;
 S.background = new T.Color(skyDay);
-S.fog = new T.FogExp2(skyDay, 0.012);
+S.fog = new T.FogExp2(skyDay, 0.010);
 
 const cam = new T.PerspectiveCamera(45, 1, 0.5, 300);
 function rs() {
@@ -1132,9 +1132,22 @@ function buildVillageProps() {
     cbg.add(sleepCat);
     sp(sleepCat, 0.24, M(0xffffff), 0, 0, 0, 1.3, 0.85, 1.0); // body
     sp(sleepCat, 0.18, M(0xffffff), 0.16, 0.1, 0.15); // head
-    // Soft breathing animation
+    // Soft breathing animation & floating cute zZZ dream particles
+    const zzzTx = cvText(64, 64, ctx => {
+      ctx.fillStyle = '#f472b6';
+      ctx.font = 'bold 36px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('zZ', 32, 44);
+    });
+    const zzzSprite = new T.Sprite(new T.SpriteMaterial({ map: zzzTx, transparent: true }));
+    zzzSprite.scale.set(0.45, 0.45, 1);
+    cbg.add(zzzSprite);
+
     anim.push(t => {
       sleepCat.scale.y = 1.0 + Math.sin(t * 2.2) * 0.06;
+      const k = (t * 0.6) % 1;
+      zzzSprite.position.set(0.1 + Math.sin(t * 1.5) * 0.08, 0.8 + k * 0.65, 0.1);
+      zzzSprite.material.opacity = 0.85 * (1 - k);
     });
   })();
 
@@ -1323,36 +1336,62 @@ anim.push((t, dt) => {
 })();
 
 /* ====================================================================
-   3. MAGIC PORTAL & WATERFALL POND
+   3. MAGIC PORTAL & TIERED WATERFALL WITH ROWBOAT DOCK
 ==================================================================== */
+// Ancient Runic Stargate with Floating Crystals
 const portalGrp = grp(16, 0, 4, -0.6);
-add(portalGrp, new T.TorusGeometry(2.4, 0.4, 10, 24), M(0x707088), 0, 2.5, 0);
+// Circular Runic Stepped Stone Dais
+cy(portalGrp, 3.2, 0.35, 0x6e6e85, 0, 0.18, 0, 3.4, 28);
+cy(portalGrp, 2.8, 0.25, 0x5a5a70, 0, 0.45, 0, 2.9, 28);
+
+// Stargate Stone Arch Ring with carved keystone
+add(portalGrp, new T.TorusGeometry(2.4, 0.42, 12, 28), M(0x75758c), 0, 2.7, 0);
+for (let r = 0; r < 8; r++) {
+  const ra = (r / 8) * Math.PI * 2;
+  bx(portalGrp, 0.28, 0.28, 0.55, 0x3b82f6, Math.sin(ra) * 2.4, 2.7 + Math.cos(ra) * 2.4, 0);
+}
+
+// Glowing Energy Vortex
 const vortexMat = new T.MeshBasicMaterial({
   color: 0x38bdf8,
   transparent: true,
-  opacity: 0.85,
+  opacity: 0.88,
   side: T.DoubleSide,
   blending: T.AdditiveBlending,
   depthWrite: false
 });
-const portalVortex = add(portalGrp, new T.CircleGeometry(2.1, 32), vortexMat, 0, 2.5, 0);
-glow(portalGrp, 0, 2.5, 0, 0x38bdf8, 10);
-[[-2, 0, 0.6], [2, 0, 0.6], [-1.6, 0, -0.8], [1.6, 0, -0.8]].forEach((p, idx) => {
-  const cry = add(portalGrp, new T.ConeGeometry(0.3, 1.2, 6), M(0x38bdf8, 0x38bdf8, 2.0), p[0], 0.6, p[2]);
-  cry.rotation.z = (idx % 2 === 0 ? 0.2 : -0.2);
-});
-anim.push(t => {
-  portalVortex.rotation.z = t * 2.5;
-  vortexMat.opacity = 0.75 + Math.sin(t * 4) * 0.18;
+const portalVortex = add(portalGrp, new T.CircleGeometry(2.1, 32), vortexMat, 0, 2.7, 0);
+glow(portalGrp, 0, 2.7, 0, 0x38bdf8, 12);
+
+// Two Giant Floating Magic Amethyst & Cyan Crystals
+const floatCrystals = [];
+[-2.8, 2.8].forEach((cx, idx) => {
+  // Carved Stone Pedestal
+  cy(portalGrp, 0.45, 1.2, 0x5a5a70, cx, 0.6, 0, 0.35, 8);
+  // Floating Crystal
+  const cryMat = M((idx ? 0xc084fc : 0x38bdf8), (idx ? 0xc084fc : 0x38bdf8), 1.8, 0.2, 0.1);
+  const cry = add(portalGrp, new T.OctahedronGeometry(0.55, 0), cryMat, cx, 1.8, 0);
+  floatCrystals.push(cry);
+  glow(portalGrp, cx, 1.8, 0, (idx ? 0xc084fc : 0x38bdf8), 2.5);
 });
 
-// Waterfall & Pond with Jumping Fish
+anim.push((t, dt) => {
+  portalVortex.rotation.z = t * 2.5;
+  vortexMat.opacity = 0.75 + Math.sin(t * 4) * 0.18;
+  floatCrystals.forEach((c, idx) => {
+    c.position.y = 1.8 + Math.sin(t * 2.2 + idx * Math.PI) * 0.2;
+    c.rotation.y += dt * 1.5;
+    c.rotation.x = Math.sin(t * 1.8) * 0.15;
+  });
+});
+
+// Tiered Cascading Waterfall, Lotus Pond, Fishing Pier & Rowboat
 const wtTex = cvText(64, 128, ctx => {
-  ctx.fillStyle = '#4aa8ff';
+  ctx.fillStyle = '#38bdf8';
   ctx.fillRect(0, 0, 64, 128);
-  ctx.fillStyle = '#d8f0ff';
-  for (let i = 0; i < 35; i++) {
-    ctx.fillRect(R2() * 64, R2() * 128, 3, 20 + R2() * 25);
+  ctx.fillStyle = '#e0f2fe';
+  for (let i = 0; i < 45; i++) {
+    ctx.fillRect(R2() * 64, R2() * 128, 3, 25 + R2() * 30);
   }
 });
 wtTex.wrapS = wtTex.wrapT = T.RepeatWrapping;
@@ -1360,39 +1399,97 @@ wtTex.wrapS = wtTex.wrapT = T.RepeatWrapping;
 (() => {
   const pg = grp(-21, 0, 6);
   const waterMat = new T.MeshStandardMaterial({
-    color: 0x2a8bff,
-    emissive: 0x1d6bff,
-    emissiveIntensity: 0.7,
+    color: 0x0284c7,
+    emissive: 0x0369a1,
+    emissiveIntensity: 0.65,
+    roughness: 0.15,
+    metalness: 0.1,
     transparent: true,
     opacity: 0.88
   });
-  cy(pg, 4.8, 0.22, 0x6b6b85, 0, 0.11, 0, 4.8, 26);
-  cy(pg, 4.4, 0.28, waterMat, 0, 0.16, 0, 4.4, 26);
 
-  for (let i = 0; i < 14; i++) {
-    const a = (i / 14) * Math.PI * 2;
-    sp(pg, 0.9, 0x8a8aa6, Math.cos(a) * 4.9, 0.4, Math.sin(a) * 4.9, 1, 0.6, 1);
+  // Deep Pond Basin & Water Surface
+  cy(pg, 5.2, 0.35, 0x64748b, 0, 0.16, 0, 5.2, 32);
+  cy(pg, 4.8, 0.38, waterMat, 0, 0.22, 0, 4.8, 32);
+
+  // Mossy Rock Perimeter Boulder Ring
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * Math.PI * 2;
+    sp(pg, 0.95, (i % 3 === 0 ? 0x475569 : 0x64748b), Math.cos(a) * 5.2, 0.45, Math.sin(a) * 5.2, 1.2, 0.65, 1.1);
   }
-  [[-1, 1.4, -4.4, 2.0], [1.4, 0.9, -4.2, 1.4], [-2.4, 0.7, -3.7, 1.2]].forEach(p => sp(pg, p[3], 0x757590, p[0], p[1], p[2]));
-  add(pg, new T.PlaneGeometry(2.0, 3.8), new T.MeshBasicMaterial({ map: wtTex, transparent: true, opacity: 0.88, side: T.DoubleSide }), -0.3, 2.0, -3.3);
-  glow(pg, -0.3, 0.8, -2.9, 0x8fd0ff, 5);
 
-  [[-1.6, 1.2], [1.9, -0.9], [0.6, 2.2], [-2.5, -1.2]].forEach(p => {
-    const pad = cy(pg, 0.55, 0.05, 0x3fae4a, p[0], 0.32, p[1]);
-    sp(pad, 0.14, 0xff8fc8, 0, 0.1, 0);
+  // Tiered Waterfall Cliff Rocks
+  [[-1.2, 1.8, -4.6, 2.4], [1.6, 1.2, -4.4, 1.8], [-2.8, 1.0, -3.9, 1.5], [0.2, 2.8, -4.9, 1.6]].forEach(p => {
+    sp(pg, p[3], 0x475569, p[0], p[1], p[2], 1.3, 0.85, 1.1);
   });
 
-  const fish = new T.Group();
-  pg.add(fish);
-  sp(fish, 0.42, 0xff9a3c, 0, 0, 0, 1.5, 0.7, 0.5);
-  sp(fish, 0.28, 0xff7a1c, -0.55, 0, 0, 0.2, 0.6, 0.15);
+  // Flowing Water Sheets (Upper Cascade & Lower Plunge)
+  const wf1 = add(pg, new T.PlaneGeometry(2.4, 3.2), new T.MeshBasicMaterial({ map: wtTex, transparent: true, opacity: 0.9, side: T.DoubleSide }), -0.2, 2.2, -3.8);
+  wf1.rotation.x = 0.18;
+  const wf2 = add(pg, new T.PlaneGeometry(2.8, 1.8), new T.MeshBasicMaterial({ map: wtTex, transparent: true, opacity: 0.85, side: T.DoubleSide }), -0.1, 0.9, -2.8);
+  wf2.rotation.x = 0.35;
+  glow(pg, -0.2, 1.2, -2.8, 0x38bdf8, 6.5);
+
+  // Floating Water Lilies & Pink Lotus Flowers
+  [[-1.8, 1.4], [2.2, -1.2], [0.8, 2.6], [-2.8, -1.5], [1.2, 1.8]].forEach((p, idx) => {
+    const pad = cy(pg, 0.55, 0.04, 0x22c55e, p[0], 0.39, p[1]);
+    const lotus = sp(pad, 0.16, (idx % 2 ? 0xf472b6 : 0xfb7185), 0, 0.12, 0);
+    sp(lotus, 0.08, 0xfef08a, 0, 0.08, 0); // yellow lotus stamen
+  });
+
+  // Wooden Fishing Pier / Dock extending over water
+  const pier = grp(2.8, 0, 1.2, 0.35);
+  pg.add(pier);
+  bx(pier, 1.4, 0.15, 3.8, 0x854d0e, 0, 0.65, 0);
+  [-0.6, 0.6].forEach(px => {
+    [ -1.4, 0, 1.4 ].forEach(pz => {
+      cy(pier, 0.08, 0.9, 0x713f12, px, 0.45, pz);
+    });
+  });
+  // Mooring Cleat Post
+  cy(pier, 0.09, 0.45, 0x581c87, 0.5, 0.85, 1.6);
+
+  // Docked Wooden Rowboat rocking in the waves
+  const boat = grp(1.8, 0.35, 3.4, -0.6);
+  pg.add(boat);
+  bx(boat, 1.3, 0.55, 2.8, 0x92400e, 0, 0.28, 0);
+  bx(boat, 1.1, 0.45, 2.5, 0x78350f, 0, 0.36, 0); // hull hollow
+  bx(boat, 1.1, 0.1, 0.55, 0xa16207, 0, 0.38, 0); // seat plank
+  // Oars resting on gunwales
+  const oar1 = cy(boat, 0.03, 1.8, 0xca8a04, -0.65, 0.5, 0.2); oar1.rotation.z = 0.5; oar1.rotation.y = 0.3;
+  const oar2 = cy(boat, 0.03, 1.8, 0xca8a04, 0.65, 0.5, 0.2); oar2.rotation.z = -0.5; oar2.rotation.y = -0.3;
+
+  // Dual Leaping Koi Fish (Golden Koi & Ruby Koi)
+  const fish1 = new T.Group();
+  pg.add(fish1);
+  sp(fish1, 0.44, 0xf97316, 0, 0, 0, 1.6, 0.7, 0.5); // gold koi
+  sp(fish1, 0.28, 0xea580c, -0.55, 0, 0, 0.2, 0.6, 0.15); // tail fin
+
+  const fish2 = new T.Group();
+  pg.add(fish2);
+  sp(fish2, 0.38, 0xef4444, 0, 0, 0, 1.5, 0.65, 0.45); // ruby koi
+  sp(fish2, 0.24, 0xffffff, -0.48, 0, 0, 0.2, 0.55, 0.15); // tail fin
+
   anim.push((t, dt) => {
-    wtTex.offset.y -= dt * 1.5;
-    const u = (t * 0.3) % 1;
-    fish.visible = u < 0.45;
-    const p = u / 0.45;
-    fish.position.set(-2.8 + p * 5.6, Math.sin(Math.PI * p) * 2.6 + 0.3, 0.5);
-    fish.rotation.z = -Math.cos(Math.PI * p) * 0.9;
+    wtTex.offset.y -= dt * 1.8;
+    // Boat gentle rocking motion
+    boat.rotation.z = Math.sin(t * 1.8) * 0.06;
+    boat.position.y = 0.35 + Math.sin(t * 2.2) * 0.04;
+
+    // Fish 1 Leap
+    const u1 = (t * 0.28) % 1;
+    fish1.visible = u1 < 0.42;
+    const p1 = u1 / 0.42;
+    fish1.position.set(-2.6 + p1 * 5.2, Math.sin(Math.PI * p1) * 2.8 + 0.3, 0.4);
+    fish1.rotation.z = -Math.cos(Math.PI * p1) * 0.95;
+
+    // Fish 2 Leap (staggered timing & alternate arc)
+    const u2 = (t * 0.28 + 0.5) % 1;
+    fish2.visible = u2 < 0.42;
+    const p2 = u2 / 0.42;
+    fish2.position.set(2.4 - p2 * 4.8, Math.sin(Math.PI * p2) * 2.5 + 0.3, -0.8);
+    fish2.rotation.z = Math.cos(Math.PI * p2) * 0.95;
+    fish2.rotation.y = Math.PI;
   });
 })();
 
@@ -1998,16 +2095,25 @@ Object.keys(CAM_VIEWS).forEach(k => {
   };
 });
 
-let isDay = true;
+let todIdx = 0; // 0: Day, 1: Sunset, 2: Night
+const TOD_CONFIGS = [
+  { name: '☀️ Ban Ngày', sky: skyDay, hemi: 0xffffff, gnd: 0x88bb77, sun: 0xfff6dd, int: 1.35, fog: 0.010 },
+  { name: '🌅 Hoàng Hôn', sky: skySunset, hemi: 0xffb74d, gnd: 0x5c2b29, sun: 0xff7043, int: 1.55, fog: 0.012 },
+  { name: '🌙 Đêm Neon', sky: skyNight, hemi: 0x9d8dfc, gnd: 0x1f1640, sun: 0x818cf8, int: 0.88, fog: 0.014 }
+];
+
 $('#btn-dn').onclick = () => {
-  isDay = !isDay;
-  $('#btn-dn').textContent = isDay ? '☀️ Ngày' : '🌙 Đêm';
-  S.background.set(isDay ? skyDay : skyNight);
-  S.fog.color.set(isDay ? skyDay : skyNight);
-  hemi.color.set(isDay ? 0xffffff : 0x9d8dfc);
-  hemi.groundColor.set(isDay ? 0x88bb77 : 0x1f1640);
-  sun.color.set(isDay ? 0xfff6dd : 0xaab8ff);
-  sun.intensity = isDay ? 1.3 : 0.95;
+  todIdx = (todIdx + 1) % TOD_CONFIGS.length;
+  const cfg = TOD_CONFIGS[todIdx];
+  $('#btn-dn').textContent = cfg.name;
+  S.background.set(cfg.sky);
+  S.fog.color.set(cfg.sky);
+  S.fog.density = cfg.fog;
+  hemi.color.set(cfg.hemi);
+  hemi.groundColor.set(cfg.gnd);
+  sun.color.set(cfg.sun);
+  sun.intensity = cfg.int;
+  showBubble(catsState[PL.act], cfg.name + ' tuyệt đẹp!');
 };
 
 // Photo Capture Feature
