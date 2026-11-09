@@ -32,6 +32,17 @@ canvas {
   touch-action: none;
 }
 
+/* Flash overlay for photo capture */
+#flash-overlay {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transition: opacity 0.3s ease;
+}
+
 /* HUD Top Header */
 .hud-top {
   position: fixed;
@@ -96,15 +107,15 @@ canvas {
   left: 14px;
   top: calc(66px + env(safe-area-inset-top, 0px));
   font-size: 12px;
-  background: rgba(14, 10, 36, 0.75);
+  background: rgba(14, 10, 36, 0.78);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(122, 92, 255, 0.4);
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 6px 14px;
+  border-radius: 10px;
   color: #d6ccff;
   pointer-events: none;
-  max-width: 320px;
-  line-height: 1.45;
+  max-width: 360px;
+  line-height: 1.5;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   transition: opacity 0.3s ease;
   z-index: 40;
@@ -115,7 +126,7 @@ canvas {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -169,6 +180,18 @@ button.on {
   box-shadow: 0 0 16px var(--pk);
 }
 
+/* Vehicle Mode Pills */
+#rides button {
+  font-weight: 600;
+  border-color: #5aa8ff;
+}
+#rides button.on {
+  border-color: #ffd23a;
+  box-shadow: 0 0 14px rgba(255, 210, 58, 0.6);
+  background: rgba(60, 48, 12, 0.9);
+  color: #fff;
+}
+
 /* Timeline progress for Movie */
 #tl {
   display: flex;
@@ -190,7 +213,7 @@ button.on {
   box-shadow: 0 0 8px var(--pk);
 }
 
-#joy, #jb, #mb, #sw { display: none; }
+#joy, #jb, #mb, #vb, #bb, #sw { display: none; }
 .play #clips, .play #who, .play #movie { display: none; }
 .play #sw { display: inline-block; }
 
@@ -242,8 +265,8 @@ button.on {
     position: fixed;
     right: 22px;
     bottom: 140px;
-    width: 62px;
-    height: 62px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     padding: 0;
     font-size: 26px;
@@ -255,15 +278,43 @@ button.on {
   .play #mb {
     display: block;
     position: fixed;
-    right: 94px;
+    right: 90px;
     bottom: 140px;
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     padding: 0;
-    font-size: 20px;
+    font-size: 19px;
     background: rgba(24, 16, 64, 0.85);
     border: 1px solid var(--pk);
+    z-index: 60;
+  }
+  .play #bb {
+    display: block;
+    position: fixed;
+    right: 146px;
+    bottom: 140px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 19px;
+    background: rgba(24, 16, 64, 0.85);
+    border: 1px solid #ffd23a;
+    z-index: 60;
+  }
+  .play #vb {
+    display: block;
+    position: fixed;
+    right: 22px;
+    bottom: 210px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 22px;
+    background: rgba(24, 16, 64, 0.85);
+    border: 1px solid #4aa8ff;
     z-index: 60;
   }
   #hp { display: none; }
@@ -411,6 +462,7 @@ button.on {
 <body>
 
 <canvas id="c"></canvas>
+<div id="flash-overlay"></div>
 <div id="cap"></div>
 
 <div class="hud-top">
@@ -419,18 +471,21 @@ button.on {
 </div>
 
 <div class="top-actions">
+  <button id="btn-photo" class="top-btn" title="Chụp ảnh màn hình lưu về máy">📸 Chụp ảnh</button>
   <button id="btn-dn" class="top-btn" title="Chuyển Ngày / Đêm">🌙 Đêm</button>
   <button id="info-btn" class="top-btn" title="Giới thiệu trang web">ℹ️ Giới thiệu</button>
 </div>
 
 <div id="hp">
-  🎮 <b>WASD / Mũi tên</b>: Di chuyển · <b>Shift</b>: Chạy nhanh · <b>Space</b>: Nhảy · <b>Q / E</b>: Xoay camera · <b>M</b>: Meow · <b>Tab</b>: Đổi mèo
+  🎮 <b>WASD / Mũi tên</b>: Di chuyển · <b>Shift</b>: Tăng tốc · <b>Space</b>: Nhảy · <b>V / F</b>: Đổi phương tiện (Xe đạp 🚲, Ván trượt 🛹, Siêu xe 🏎️) · <b>B</b>: Chuông/Còi · <b>M</b>: Meow · <b>Q / E</b>: Xoay camera
 </div>
 
 <!-- Mobile Touch Buttons -->
 <div id="joy"><i></i></div>
 <button id="jb" title="Nhảy">⤒</button>
 <button id="mb" title="Meow">🐾</button>
+<button id="bb" title="Chuông / Còi">🔔</button>
+<button id="vb" title="Đổi xe">🚲</button>
 
 <!-- UI Stack at Bottom -->
 <div class="stack">
@@ -443,6 +498,13 @@ button.on {
     <button data-w="1">🐈‍⬛ Mèo Đen</button>
     <button data-w="2">🐱 Mèo Trắng</button>
   </div>
+  <div class="row" id="rides">
+    <button data-r="walk" class="on">🚶 Đi bộ</button>
+    <button data-r="bike">🚲 Đạp xe</button>
+    <button data-r="board">🛹 Ván trượt</button>
+    <button data-r="car">🏎️ Lái siêu xe</button>
+    <button id="btn-bell">🔔 Chuông/Còi</button>
+  </div>
   <div class="row" id="clips"></div>
   <div class="row">
     <button id="pm">🎮 Chơi mèo</button>
@@ -450,7 +512,7 @@ button.on {
     <button id="rot" class="on">🔄 Tự xoay</button>
     <button id="v1">🏠 Biệt thự</button>
     <button id="v2">🐾 Cận mèo</button>
-    <button id="v3">🚗 Siêu xe</button>
+    <button id="v3">🚗 Đường phố</button>
     <button id="v4">🌀 Cổng sao & hồ</button>
     <button id="mus">🎵 Nhạc: Tắt</button>
   </div>
@@ -472,14 +534,14 @@ button.on {
 
       <div class="feat-grid">
         <div class="feat-box">
-          <div class="icon">🎮</div>
-          <h4>Tự do điều khiển mèo</h4>
-          <p>Hóa thân thành Mèo Đen hoặc Mèo Trắng chạy nhảy tung tăng quanh làng, bước qua cổng không gian và trượt tường êm ái.</p>
+          <div class="icon">🚲</div>
+          <h4>Đạp xe & Lái siêu xe</h4>
+          <p>Tự do lựa chọn phương tiện di chuyển: <b>Đạp xe đạp thể thao</b>, <b>Trượt ván điện neon</b>, hoặc <b>Lái siêu xe thể thao</b> phóng quanh làng.</p>
         </div>
         <div class="feat-box">
-          <div class="icon">🎬</div>
-          <h4>Thưởng thức phim ngắn</h4>
-          <p>Kịch bản điện ảnh tự động dẫn dắt máy quay qua các danh lam: Biệt thự, cối xay gió, hồ nước, siêu xe và cổng dịch chuyển.</p>
+          <div class="icon">📸</div>
+          <h4>Chụp ảnh lưu niệm</h4>
+          <p>Bấm nút <b>📸 Chụp ảnh</b> để lưu ngay bức ảnh 3D Full HD sắc nét của 2 chú mèo về máy tính hoặc điện thoại.</p>
         </div>
         <div class="feat-box">
           <div class="icon">🌀</div>
@@ -487,9 +549,9 @@ button.on {
           <p>Cổng Stargate phát sáng xoay tít có thể dịch chuyển tức thời; Drone chở hàng bay lượn trên nóc gara.</p>
         </div>
         <div class="feat-box">
-          <div class="icon">🏎️</div>
-          <h4>Siêu xe & Nhịp sống</h4>
-          <p>Đường phố có siêu xe thể thao, mô tô phân khối lớn, xe tay ga lướt đi; cối xay gió và guồng nước quay đều.</p>
+          <div class="icon">🎬</div>
+          <h4>Phim ngắn & Nhịp sống</h4>
+          <p>Kịch bản điện ảnh tự động dẫn dắt máy quay qua các danh lam; thác nước đổ, cá nhảy, đom đóm và cánh hoa anh đào bay lãng mạn.</p>
         </div>
       </div>
 
@@ -498,12 +560,14 @@ button.on {
         <table class="ctrl-table">
           <tr><th>Thao tác</th><th>Máy tính (PC/Laptop)</th><th>Điện thoại (Mobile)</th></tr>
           <tr><td>Di chuyển</td><td>Phím <b>W A S D</b> hoặc <b>Phím Mũi tên</b></td><td>Kéo cần gạt <b>Joystick</b> ảo</td></tr>
+          <tr><td>Đổi phương tiện</td><td>Phím <b>V</b> hoặc <b>F</b> (Đi bộ / Xe đạp / Ván / Xe)</td><td>Bấm nút <b>🚲</b> hoặc thanh dưới</td></tr>
+          <tr><td>Chuông xe / Còi</td><td>Phím <b>B</b> (Leng keng 🔔 / Bíp bíp 📢)</td><td>Bấm nút <b>🔔</b></td></tr>
           <tr><td>Chạy nước rút</td><td>Giữ phím <b>Shift</b> khi di chuyển</td><td>Kéo cần gạt Joystick > 75%</td></tr>
-          <tr><td>Nhảy cao</td><td>Phím <b>Space (Phím cách)</b></td><td>Nút nhảy <b>⤒</b></td></tr>
+          <tr><td>Nhảy cao / Bật xe</td><td>Phím <b>Space (Phím cách)</b></td><td>Nút nhảy <b>⤒</b></td></tr>
           <tr><td>Xoay Camera</td><td>Phím <b>Q / E</b> hoặc Kéo chuột</td><td>Vuốt 1 ngón tay xoay</td></tr>
           <tr><td>Đổi nhân vật</td><td>Phím <b>Tab</b> hoặc nút <b>🔁 Đổi mèo</b></td><td>Nút <b>🔁 Đổi mèo</b></td></tr>
           <tr><td>Tiếng kêu Meow</td><td>Phím <b>M</b> hoặc <b>C</b></td><td>Nút biểu tượng <b>🐾</b></td></tr>
-          <tr><td>Gõ code / Cảm xúc</td><td>Bấm các nút biểu cảm bên dưới</td><td>Bấm các nút biểu cảm</td></tr>
+          <tr><td>Chụp ảnh màn hình</td><td>Bấm nút <b>📸 Chụp ảnh</b> góc trên</td><td>Bấm nút <b>📸 Chụp ảnh</b></td></tr>
           <tr><td>Thu phóng (Zoom)</td><td>Cuộn chuột</td><td>Chụm 2 ngón tay</td></tr>
         </table>
       </div>
@@ -518,12 +582,12 @@ button.on {
 <script>
 /* ====================================================================
    TT Trung Tín - Làng 3D & Mèo Chibi Animation
-   Three.js Interactive Diorama Engine
+   Interactive Three.js Diorama Engine with Rideable Vehicles
 ==================================================================== */
 const T = THREE, $ = s => document.querySelector(s), R2 = Math.random;
 
 // Renderer setup with optimized settings
-const R = new T.WebGLRenderer({ canvas: $('#c'), antialias: true, powerPreference: 'high-performance' });
+const R = new T.WebGLRenderer({ canvas: $('#c'), antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
 R.setPixelRatio(Math.min(devicePixelRatio, 2));
 R.shadowMap.enabled = true;
 R.shadowMap.type = T.PCFSoftShadowMap;
@@ -627,11 +691,8 @@ const cvText = (w, h, fn) => {
 ==================================================================== */
 const isl = grp(0, 0, 0);
 isl.scale.z = 0.82;
-// Lush top grass
 cy(isl, 32, 1.0, 0x3d944c, 0, -0.5, 0, 32, 44);
-// Stone bedrock rim
 cy(isl, 32.5, 0.8, 0x6e6e88, 0, -1.3, 0, 32.5, 44);
-// Inverted rocky mountain cone beneath the floating island
 const underCone = add(isl, new T.ConeGeometry(32.5, 12, 32), M(0x382c4f), 0, -7.3, 0);
 underCone.rotation.x = Math.PI;
 
@@ -692,24 +753,19 @@ function buildVilla() {
   const g = grp(-5, 0, -9, 0);
   const w = 9.5, d = 6, h = 5.2;
 
-  // Stone base & timber walls
   bx(g, w + 0.8, 0.45, d + 0.8, 0x75758c, 0, 0.22, 0);
   bx(g, w, h, d, 0xeeddca, 0, 0.45 + h / 2, 0);
 
-  // Timber vertical framing columns
   [-1, 1].forEach(a => [-1, 1].forEach(b => bx(g, 0.28, h, 0.28, 0x5a361e, a * w / 2, 0.45 + h / 2, b * d / 2)));
   bx(g, w + 0.1, 0.22, d + 0.1, 0x5a361e, 0, 0.45 + h * 0.5, 0);
 
-  // Roof
   roof(g, w + 1.2, d + 1.2, h * 0.58, 0x2c3fa8, 0, 0.45 + h, 0);
 
-  // Windows with warm light & flower boxes
   const winMat = GLW(0xffd578);
   const win = (X, Y) => {
     add(g, new T.PlaneGeometry(0.95, 1.15), winMat, X, Y, d / 2 + 0.03);
     glow(g, X, Y, d / 2 + 0.4, 0xffb84d, 2.5);
     bx(g, 1.15, 0.12, 0.28, 0x5a361e, X, Y - 0.68, d / 2 + 0.14);
-    // Colorful flower box
     const fb = bx(g, 1.0, 0.2, 0.22, 0x5a361e, X, Y - 0.68, d / 2 + 0.22);
     for (let f = -0.35; f <= 0.35; f += 0.25) {
       sp(fb, 0.08, (f < 0 ? 0xff4fa8 : 0xffcf4d), f, 0.12, 0);
@@ -718,22 +774,18 @@ function buildVilla() {
   [-0.3, 0.3].forEach(k => win(k * w, 1.8));
   [-0.3, 0, 0.3].forEach(k => win(k * w, 0.45 + h * 0.78));
 
-  // Front Wooden Door with steps
   bx(g, 1.2, 2.0, 0.14, 0x5a361e, 0, 1.45, d / 2 + 0.07);
   bx(g, 1.8, 0.2, 0.8, 0x75758c, 0, 0.1, d / 2 + 0.45);
 
-  // Stone Chimney & smoke
   bx(g, 0.85, 2.2, 0.85, 0x828294, w * 0.28, 0.45 + h + 1.1, -d * 0.2);
   smoke(g, w * 0.28, 0.45 + h + 2.3, -d * 0.2);
 
-  // Balcony with wooden railings
   bx(g, w * 0.6, 0.16, 1.3, 0x8b5a2b, 0, 0.45 + h * 0.5, d / 2 + 0.65);
   for (let i = 0; i < 9; i++) {
     bx(g, 0.08, 0.75, 0.08, 0x5a361e, -w * 0.3 + i * (w * 0.6 / 8), 0.45 + h * 0.5 + 0.42, d / 2 + 1.25);
   }
   bx(g, w * 0.62, 0.08, 0.08, 0x5a361e, 0, 0.45 + h * 0.5 + 0.8, d / 2 + 1.25);
 
-  // Front TT Crown Sign
   const tx = cvText(256, 160, ctx => {
     ctx.textAlign = 'center';
     ctx.fillStyle = '#8fc0ff';
@@ -751,7 +803,6 @@ function buildVilla() {
 }
 buildVilla();
 
-// Village Houses (left & right)
 function simpleHouse(x, z, ry, w, d, h, wall, rc, awning = false) {
   const g = grp(x, 0, z, ry);
   bx(g, w + 0.6, 0.35, d + 0.6, 0x75758c, 0, 0.18, 0);
@@ -771,17 +822,16 @@ function simpleHouse(x, z, ry, w, d, h, wall, rc, awning = false) {
 simpleHouse(-19, -4, 0.5, 5, 4.2, 3.2, 0xe8cdb8, 0xc43a4a);
 simpleHouse(19, -4, -0.5, 5.5, 4.2, 3.4, 0xf0dcc8, 0x2c3fa8, true);
 
-// Garage + Rooftop Terrace (mô hình 2.png)
+// Garage + Rooftop Terrace
 const garageGrp = grp(7.0, 0, -8.5);
 bx(garageGrp, 6.4, 0.3, 5.8, 0x75758c, 0, 0.15, 0);
 bx(garageGrp, 6.4, 3.5, 0.4, 0x8a8a9e, 0, 2.0, -2.7);
 [-3.0, 3.0].forEach(a => bx(garageGrp, 0.5, 3.5, 0.5, 0x8a8a9e, a, 2.0, 2.6));
 bx(garageGrp, 6.8, 0.5, 6.0, 0x3a3f8f, 0, 3.9, 0);
-// Neon light bar over garage
 bx(garageGrp, 6.0, 0.14, 0.14, GLW(0x4aa8ff), 0, 3.5, 2.9);
 glow(garageGrp, 0, 3.5, 3.0, 0x4aa8ff, 6);
 
-// Rooftop Patio: Table & Parasol Umbrella
+// Rooftop Patio Table & Umbrella
 bx(garageGrp, 1.4, 0.1, 1.4, 0x8b5a2b, 0, 4.2, 0);
 cy(garageGrp, 0.06, 2.4, 0x5a361e, 0, 5.4, 0);
 add(garageGrp, new T.ConeGeometry(1.6, 0.6, 12), M(0xe63946), 0, 6.4, 0);
@@ -796,7 +846,6 @@ add(garageGrp, new T.ConeGeometry(1.6, 0.6, 12), M(0xe63946), 0, 6.4, 0);
     ctx.shadowColor = '#3aa0ff';
     ctx.shadowBlur = 16;
     ctx.beginPath();
-    // Cat ears & face outline
     ctx.moveTo(60, 120); ctx.lineTo(70, 40); ctx.lineTo(120, 80);
     ctx.lineTo(136, 80); ctx.lineTo(186, 40); ctx.lineTo(196, 120);
     ctx.stroke();
@@ -814,13 +863,12 @@ add(garageGrp, new T.ConeGeometry(1.6, 0.6, 12), M(0xe63946), 0, 6.4, 0);
   });
 })();
 
-// Delivery Drone (from mô hình 2.png)
+// Delivery Drone
 const drone = new T.Group();
 drone.position.set(2, 8, -5);
 S.add(drone);
 bx(drone, 1.2, 0.25, 1.2, 0x222233, 0, 0, 0);
 sp(drone, 0.25, GLW(0x3a8bff), 0, 0.15, 0.5);
-// 4 arms and spinning propellers
 const droneRotors = [];
 [[-0.9, -0.9], [0.9, -0.9], [-0.9, 0.9], [0.9, 0.9]].forEach(p => {
   cy(drone, 0.04, 0.8, 0x444455, p[0] * 0.6, 0.05, p[1] * 0.6).rotation.z = Math.PI / 3;
@@ -828,7 +876,6 @@ const droneRotors = [];
   droneRotors.push(rotor);
   glow(drone, p[0], 0.22, p[1], (p[0] < 0 ? 0x4aa8ff : 0xff4fa8), 0.8);
 });
-// Mini delivery crate with paw print
 bx(drone, 0.65, 0.65, 0.65, 0xc89a5a, 0, -0.65, 0);
 anim.push((t, dt) => {
   droneRotors.forEach(r => r.rotation.y += dt * 30);
@@ -838,7 +885,7 @@ anim.push((t, dt) => {
   drone.rotation.y = -t * 0.8;
 });
 
-// Windmill & Turning Sails (cối xay gió)
+// Windmill & Waterwheel
 (() => {
   const wg = grp(-23, 0, -11, 0.4);
   cy(wg, 2.2, 6.5, 0xe8e2dc, 0, 3.25, 0, 1.4, 12);
@@ -853,7 +900,6 @@ anim.push((t, dt) => {
   }
   anim.push((t, dt) => hub.rotation.z -= dt * 1.1);
 
-  // Spinning Waterwheel at side
   const ww = new T.Group();
   ww.position.set(-2.8, 2, 0);
   wg.add(ww);
@@ -865,13 +911,12 @@ anim.push((t, dt) => {
   anim.push((t, dt) => ww.rotation.x += dt * 0.8);
 })();
 
-// Observation Tower with Telescope (Tháp Thiên Văn)
+// Observation Tower with Telescope
 (() => {
   const tg = grp(22, 0, -13);
   cy(tg, 2.2, 7.5, 0xbfb8e0, 0, 3.75, 0, 1.6, 16);
   cy(tg, 2.0, 0.4, 0x6b4528, 0, 7.7, 0);
   add(tg, new T.SphereGeometry(1.8, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2), M(0x3b5bd8), 0, 7.9, 0);
-  // Telescope tube
   const tele = cy(tg, 0.15, 3.2, 0xd4af37, 1.0, 9.2, 0, 0.22);
   tele.rotation.z = -1.1;
   tele.rotation.y = 0.5;
@@ -881,10 +926,8 @@ anim.push((t, dt) => {
 /* ====================================================================
    3. MAGIC PORTAL & WATERFALL POND
 ==================================================================== */
-// Stargate Style Magic Portal (Cổng không gian huyền ảo từ mô hình 2.png)
 const portalGrp = grp(16, 0, 4, -0.6);
 add(portalGrp, new T.TorusGeometry(2.4, 0.4, 10, 24), M(0x707088), 0, 2.5, 0);
-// Glowing Swirling Vortex
 const vortexMat = new T.MeshBasicMaterial({
   color: 0x38bdf8,
   transparent: true,
@@ -895,7 +938,6 @@ const vortexMat = new T.MeshBasicMaterial({
 });
 const portalVortex = add(portalGrp, new T.CircleGeometry(2.1, 32), vortexMat, 0, 2.5, 0);
 glow(portalGrp, 0, 2.5, 0, 0x38bdf8, 10);
-// Glowing crystals at portal base
 [[-2, 0, 0.6], [2, 0, 0.6], [-1.6, 0, -0.8], [1.6, 0, -0.8]].forEach((p, idx) => {
   const cry = add(portalGrp, new T.ConeGeometry(0.3, 1.2, 6), M(0x38bdf8, 0x38bdf8, 2.0), p[0], 0.6, p[2]);
   cry.rotation.z = (idx % 2 === 0 ? 0.2 : -0.2);
@@ -925,31 +967,26 @@ wtTex.wrapS = wtTex.wrapT = T.RepeatWrapping;
     transparent: true,
     opacity: 0.88
   });
-  // Pond rim & water surface
   cy(pg, 4.8, 0.22, 0x6b6b85, 0, 0.11, 0, 4.8, 26);
   cy(pg, 4.4, 0.28, waterMat, 0, 0.16, 0, 4.4, 26);
 
-  // Stepping stones around
   for (let i = 0; i < 14; i++) {
     const a = (i / 14) * Math.PI * 2;
     sp(pg, 0.9, 0x8a8aa6, Math.cos(a) * 4.9, 0.4, Math.sin(a) * 4.9, 1, 0.6, 1);
   }
-  // Waterfall rock formation & flowing plane
   [[-1, 1.4, -4.4, 2.0], [1.4, 0.9, -4.2, 1.4], [-2.4, 0.7, -3.7, 1.2]].forEach(p => sp(pg, p[3], 0x757590, p[0], p[1], p[2]));
-  const wfPlane = add(pg, new T.PlaneGeometry(2.0, 3.8), new T.MeshBasicMaterial({ map: wtTex, transparent: true, opacity: 0.88, side: T.DoubleSide }), -0.3, 2.0, -3.3);
+  add(pg, new T.PlaneGeometry(2.0, 3.8), new T.MeshBasicMaterial({ map: wtTex, transparent: true, opacity: 0.88, side: T.DoubleSide }), -0.3, 2.0, -3.3);
   glow(pg, -0.3, 0.8, -2.9, 0x8fd0ff, 5);
 
-  // Water lilies & lotus
-  [[-1.6, 1.2], [1.9, -0.9], [0.6, 2.2], [-2.5, -1.2]].forEach((p, idx) => {
+  [[-1.6, 1.2], [1.9, -0.9], [0.6, 2.2], [-2.5, -1.2]].forEach(p => {
     const pad = cy(pg, 0.55, 0.05, 0x3fae4a, p[0], 0.32, p[1]);
     sp(pad, 0.14, 0xff8fc8, 0, 0.1, 0);
   });
 
-  // Leaping Golden Fish
   const fish = new T.Group();
   pg.add(fish);
   sp(fish, 0.42, 0xff9a3c, 0, 0, 0, 1.5, 0.7, 0.5);
-  sp(fish, 0.28, 0xff7a1c, -0.55, 0, 0, 0.2, 0.6, 0.15); // tail fin
+  sp(fish, 0.28, 0xff7a1c, -0.55, 0, 0, 0.2, 0.6, 0.15);
   anim.push((t, dt) => {
     wtTex.offset.y -= dt * 1.5;
     const u = (t * 0.3) % 1;
@@ -961,7 +998,7 @@ wtTex.wrapS = wtTex.wrapT = T.RepeatWrapping;
 })();
 
 /* ====================================================================
-   4. NATURE, SAKURA TREES & BLOSSOM PARTICLES
+   4. NATURE, SAKURA TREES & PARTICLES
 ==================================================================== */
 function tree(x, z, type, scale = 1) {
   const g = grp(x, 0, z);
@@ -974,13 +1011,11 @@ function tree(x, z, type, scale = 1) {
   if (type === 'pine') {
     [0, 1, 2].forEach(i => add(foliage, new T.ConeGeometry(1.9 - i * 0.45, 2.3, 8), M(0x1f7a52), 0, 0.6 + i * 1.35, 0));
   } else if (type === 'sakura') {
-    // Beautiful fluffy cherry blossom pink foliage
     const c1 = 0xff9ad0, c2 = 0xffbedf;
     [[0, 1.5, 0, 2.0], [1.5, 0.9, 0.4, 1.4], [-1.5, 1.0, -0.4, 1.5], [0, 2.8, 0.2, 1.4], [0.4, 0.7, -1.4, 1.3]].forEach((p, i) => {
       sp(foliage, p[3], (i % 2 ? c2 : c1), p[0], p[1], p[2]);
     });
   } else {
-    // Green oak tree
     [[0, 1.4, 0, 1.9], [1.4, 0.8, 0.4, 1.3], [-1.4, 0.9, -0.3, 1.4], [0, 2.6, 0.2, 1.3], [0.3, 0.6, -1.3, 1.2]].forEach((p, i) => {
       sp(foliage, p[3], (i % 2 ? 0x5fc95a : 0x46b04f), p[0], p[1], p[2]);
     });
@@ -988,7 +1023,6 @@ function tree(x, z, type, scale = 1) {
   sway.push({ o: foliage, ph: x + z });
 }
 
-// Tree placements around island
 tree(-13, -8, 'sakura', 1.6);
 tree(-26, -2, 'oak');
 tree(-27, -6, 'pine');
@@ -1008,7 +1042,6 @@ anim.push(t => {
   });
 });
 
-// Sakura Falling Petals & Fireflies particle system
 function createParticles(n, fn, color, size) {
   const g = new T.BufferGeometry(), arr = new Float32Array(n * 3);
   for (let i = 0; i < n; i++) fn(arr, i * 3);
@@ -1017,7 +1050,6 @@ function createParticles(n, fn, color, size) {
   S.add(pts);
   return { arr, g };
 }
-// Stars in deep space
 createParticles(800, (a, i) => {
   const u = R2() * 6.28, v = R2() * 1.2 + 0.1, r = 140;
   a[i] = Math.cos(u) * Math.cos(v) * r;
@@ -1025,14 +1057,12 @@ createParticles(800, (a, i) => {
   a[i + 2] = Math.sin(u) * Math.cos(v) * r;
 }, 0xffffff, 0.95);
 
-// Falling Sakura Pink Petals
 const petals = createParticles(120, (a, i) => {
   a[i] = -12 + (R2() - 0.5) * 22;
   a[i + 1] = R2() * 12;
   a[i + 2] = -8 + (R2() - 0.5) * 22;
 }, 0xffb3d9, 0.35);
 
-// Floating fireflies near trees & pond
 const fireflies = createParticles(80, (a, i) => {
   a[i] = (R2() - 0.5) * 50;
   a[i + 1] = 0.5 + R2() * 5;
@@ -1056,7 +1086,6 @@ anim.push((t, dt) => {
   }
   fireflies.g.attributes.position.needsUpdate = true;
 
-  // Chimney smoke rise
   smokes.forEach(s => {
     const u = s.userData, k = (t * 0.25 + u.p) % 1;
     s.position.set(u.x + k * 1.4, u.y + k * 4.5, u.z);
@@ -1067,33 +1096,26 @@ anim.push((t, dt) => {
 });
 
 /* ====================================================================
-   5. VEHICLES (Supercar, Superbike, Pink Scooter)
+   5. NPC ROAD VEHICLES
 ==================================================================== */
-// Sleek Sports Supercar (từ mô hình 2.png)
 function mkSupercar(bodyColor) {
   const g = new T.Group();
-  // Aerodynamic body & cockpit
   bx(g, 3.0, 0.55, 1.4, bodyColor, 0, 0.55, 0);
-  bx(g, 1.5, 0.45, 1.15, 0x111628, -0.2, 1.0, 0); // tinted glass cockpit
-  // Rear spoiler
+  bx(g, 1.5, 0.45, 1.15, 0x111628, -0.2, 1.0, 0);
   bx(g, 0.1, 0.35, 1.3, bodyColor, -1.35, 0.9, 0);
-  // Wheels
   [[-0.95, -0.68], [0.95, -0.68], [-0.95, 0.68], [0.95, 0.68]].forEach(w => {
     cy(g, 0.32, 0.25, 0x111116, w[0], 0.32, w[1]).rotation.x = Math.PI / 2;
-    cy(g, 0.18, 0.26, 0x555566, w[0], 0.32, w[1]).rotation.x = Math.PI / 2; // rim
+    cy(g, 0.18, 0.26, 0x555566, w[0], 0.32, w[1]).rotation.x = Math.PI / 2;
   });
-  // Headlights & Neon Underglow
   bx(g, 0.08, 0.15, 0.35, GLW(0xffffff), 1.5, 0.6, 0.42);
   bx(g, 0.08, 0.15, 0.35, GLW(0xffffff), 1.5, 0.6, -0.42);
-  // Taillights
   bx(g, 0.08, 0.12, 0.4, GLW(0xff2a4a), -1.5, 0.6, 0.42);
   bx(g, 0.08, 0.12, 0.4, GLW(0xff2a4a), -1.5, 0.6, -0.42);
   glow(g, 1.8, 0.6, 0, 0xfff0cc, 3);
-  glow(g, 0, 0.18, 0, 0x38bdf8, 4.5); // underglow
+  glow(g, 0, 0.18, 0, 0x38bdf8, 4.5);
   return g;
 }
 
-// Sports Superbike
 function mkMoto(c, neonColor) {
   const g = new T.Group();
   [-0.65, 0.65].forEach(x => {
@@ -1106,7 +1128,6 @@ function mkMoto(c, neonColor) {
   return g;
 }
 
-// Retro Pink Scooter (Vespa từ mô hình 2.png)
 function mkScooter() {
   const g = new T.Group();
   [-0.6, 0.6].forEach(x => {
@@ -1114,7 +1135,7 @@ function mkScooter() {
   });
   bx(g, 1.2, 0.3, 0.35, 0xff9ec8, 0, 0.55, 0);
   cy(g, 0.05, 0.8, 0xcccccc, 0.45, 0.95, 0);
-  bx(g, 0.4, 0.08, 0.22, 0x5a361e, -0.2, 0.75, 0); // seat
+  bx(g, 0.4, 0.08, 0.22, 0x5a361e, -0.2, 0.75, 0);
   glow(g, 0.6, 0.95, 0, 0xfff0cc, 1.5);
   return g;
 }
@@ -1138,8 +1159,104 @@ anim.push((t, dt) => {
 });
 
 /* ====================================================================
-   6. HIGH-FIDELITY CHIBI CAT 3D CHARACTERS
-   (Strictly modeled after Bảng thiết kế nhân vật mèo chibi 3D.png)
+   6. RIDEABLE VEHICLES (Bicycle, Hoverboard, Convertible Supercar)
+==================================================================== */
+// 1. Bicycle Builder (Xe đạp thể thao)
+function createRideBicycle(isWhite) {
+  const bg = new T.Group();
+  const frameCol = isWhite ? 0xff4fa8 : 0x2563eb;
+  const tireMat = M(0x16161c, 0, 0, 0.9);
+  const metalMat = M(0xd4d4dc, 0, 0, 0.2, 0.85);
+  const frameMat = M(frameCol, frameCol, 0.35, 0.3, 0.1);
+
+  // Main diamond frame tubes
+  const topTube = cy(bg, 0.045, 1.35, frameMat, 0, 0.82, 0); topTube.rotation.x = Math.PI / 2;
+  const downTube = cy(bg, 0.045, 1.25, frameMat, 0, 0.52, 0.22); downTube.rotation.x = 0.9;
+  const seatTube = cy(bg, 0.045, 1.05, frameMat, 0, 0.58, -0.4); seatTube.rotation.x = -0.3;
+  const rearStay = cy(bg, 0.035, 1.1, frameMat, 0, 0.48, -0.78); rearStay.rotation.x = 0.6;
+
+  // Leather saddle
+  bx(bg, 0.35, 0.08, 0.45, 0x111116, 0, 1.05, -0.45);
+
+  // Handlebars with grips & Brass bell
+  const hb = cy(bg, 0.038, 0.9, metalMat, 0, 1.15, 0.68); hb.rotation.z = Math.PI / 2;
+  [-0.4, 0.4].forEach(x => bx(bg, 0.1, 0.07, 0.07, 0x111116, x, 1.15, 0.68));
+  sp(bg, 0.07, M(0xffd700, 0, 0, 0.2, 0.9), 0.2, 1.22, 0.68); // bell
+
+  // Front & Rear Wheels
+  const fWheel = new T.Group();
+  fWheel.position.set(0, 0.45, 0.92);
+  bg.add(fWheel);
+  add(fWheel, new T.TorusGeometry(0.45, 0.06, 8, 24), tireMat);
+  cy(fWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.z = Math.PI / 2;
+  cy(fWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.y = Math.PI / 2;
+
+  const rWheel = new T.Group();
+  rWheel.position.set(0, 0.45, -0.92);
+  bg.add(rWheel);
+  add(rWheel, new T.TorusGeometry(0.45, 0.06, 8, 24), tireMat);
+  cy(rWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.z = Math.PI / 2;
+  cy(rWheel, 0.015, 0.88, metalMat, 0, 0, 0).rotation.y = Math.PI / 2;
+
+  // Crank & Pedals
+  const crank = new T.Group();
+  crank.position.set(0, 0.35, -0.15);
+  bg.add(crank);
+  bx(crank, 0.22, 0.05, 0.1, 0x222228, -0.28, 0.22, 0);
+  bx(crank, 0.22, 0.05, 0.1, 0x222228, 0.28, -0.22, 0);
+  cy(crank, 0.02, 0.44, metalMat, -0.22, 0.11, 0);
+  cy(crank, 0.02, 0.44, metalMat, 0.22, -0.11, 0);
+
+  bg.visible = false;
+  return { bg, fWheel, rWheel, crank };
+}
+
+// 2. Futuristic Neon Hoverboard Builder (Ván trượt điện)
+function createRideBoard(isWhite) {
+  const g = new T.Group();
+  g.position.set(0, 0.18, 0);
+  const neonCol = isWhite ? 0xff4fa8 : 0x38bdf8;
+  bx(g, 0.78, 0.08, 1.85, 0x181824, 0, 0, 0);
+  bx(g, 0.82, 0.04, 1.88, GLW(neonCol), 0, 0, 0);
+  [[-0.22, -0.55], [0.22, -0.55], [-0.22, 0.55], [0.22, 0.55]].forEach(p => {
+    cy(g, 0.15, 0.06, GLW(neonCol), p[0], -0.06, p[1]);
+    glow(g, p[0], -0.16, p[1], neonCol, 1.3);
+  });
+  g.visible = false;
+  return g;
+}
+
+// 3. Convertible Supercar Builder (Siêu xe thể thao)
+function createRideCar(isWhite) {
+  const g = new T.Group();
+  g.position.set(0, 0.2, 0);
+  const carCol = isWhite ? 0xff3385 : 0x1d4ed8;
+  bx(g, 2.3, 0.65, 3.4, carCol, 0, 0.45, 0);
+  // Interior seat cutout
+  bx(g, 1.7, 0.45, 1.6, 0x111116, 0, 0.65, -0.1);
+  // Windshield
+  const ws = bx(g, 1.8, 0.5, 0.1, GLW(0x70c0ff, 0.6), 0, 0.95, 0.6);
+  ws.rotation.x = -0.3;
+  // Headlights & Taillights
+  bx(g, 0.4, 0.18, 0.1, GLW(0xffffff), -0.75, 0.45, 1.7);
+  bx(g, 0.4, 0.18, 0.1, GLW(0xffffff), 0.75, 0.45, 1.7);
+  glow(g, -0.75, 0.45, 1.9, 0xfff0cc, 2.5);
+  glow(g, 0.75, 0.45, 1.9, 0xfff0cc, 2.5);
+  bx(g, 0.5, 0.15, 0.1, GLW(0xff2244), -0.75, 0.55, -1.7);
+  bx(g, 0.5, 0.15, 0.1, GLW(0xff2244), 0.75, 0.55, -1.7);
+
+  const wheels = [];
+  [[-1.2, 0.95], [1.2, 0.95], [-1.2, -0.95], [1.2, -0.95]].forEach(w => {
+    const wh = cy(g, 0.36, 0.25, 0x111116, w[0], 0.36, w[1]);
+    wh.rotation.z = Math.PI / 2;
+    wheels.push(wh);
+  });
+  g.visible = false;
+  return { g, wheels };
+}
+
+/* ====================================================================
+   7. CHIBI CAT CHARACTERS (Model & Rigging)
 ==================================================================== */
 function mkChibiCat(isWhite, scale = 0.85) {
   const furColor = isWhite ? 0xfffcfd : 0x1c1c28;
@@ -1160,9 +1277,8 @@ function mkChibiCat(isWhite, scale = 0.85) {
 
   const arms = [], legs = [], tail = [];
 
-  // 1. Torso / Hoodie
+  // Torso / Hoodie
   const body = cy(g, 0.48, 0.95, hoodieMat, 0, 1.1, 0, 0.42, 18);
-  // Hoodie hood folded behind neck
   sp(g, 0.45, hoodieMat, 0, 1.55, -0.35, 1.1, 0.6, 0.6);
 
   // White Paw print on chest (🐾)
@@ -1171,44 +1287,36 @@ function mkChibiCat(isWhite, scale = 0.85) {
     add(pawChest, new T.CircleGeometry(0.038, 10), whiteMat, pt[0], pt[1], 0);
   });
 
-  // Skirt for White Cat (chân váy xếp ly hồng)
-  let skirt;
   if (isWhite) {
-    skirt = cy(g, 0.72, 0.35, hoodieMat, 0, 0.72, 0, 0.52, 20);
+    cy(g, 0.72, 0.35, hoodieMat, 0, 0.72, 0, 0.52, 20);
   }
 
-  // 2. Head
+  // Head
   const head = new T.Group();
   head.position.y = 1.95;
   g.add(head);
   sp(head, 0.85, furMat, 0, 0, 0, 1.02, 0.92, 0.95, 20);
 
-  // Ears & Pink Inner Ears
+  // Ears & Inner Ears
   [-1, 1].forEach(side => {
     const ear = add(head, new T.ConeGeometry(0.3, 0.6, 4), furMat, side * 0.52, 0.72, 0);
     ear.rotation.z = -side * 0.4;
     add(ear, new T.ConeGeometry(0.18, 0.4, 4), pinkMat, 0, -0.05, 0.08);
   });
 
-  // Big Expressive Eyes (Anime catchlights)
+  // Eyes with catchlights
   [-1, 1].forEach(side => {
     const eyeGrp = new T.Group();
     eyeGrp.position.set(side * 0.32, 0.03, 0.72);
     head.add(eyeGrp);
-    // Iris
     sp(eyeGrp, 0.22, irisMat, 0, 0, 0, 1.0, 1.25, 0.5);
-    // Dark pupil
     sp(eyeGrp, 0.18, darkPupil, 0, 0, 0.04, 0.95, 1.2, 0.5);
-    // Big white shine glint
     sp(eyeGrp, 0.065, whiteMat, 0.06, 0.09, 0.1);
-    // Small secondary glint
     sp(eyeGrp, 0.035, whiteMat, -0.05, -0.07, 0.1);
   });
 
-  // Cute tiny nose & mouth
+  // Nose & Whiskers
   sp(head, 0.045, pinkMat, 0, -0.12, 0.84);
-
-  // Whiskers (3 on each cheek)
   [-1, 1].forEach(side => {
     [-0.06, 0, 0.06].forEach(wY => {
       const whk = cy(head, 0.008, 0.45, (isWhite ? 0xdddddd : 0x888888), side * 0.55, -0.1 + wY, 0.55);
@@ -1216,57 +1324,49 @@ function mkChibiCat(isWhite, scale = 0.85) {
     });
   });
 
-  // Pink blush for White Cat
   if (isWhite) {
     [-1, 1].forEach(side => {
       sp(head, 0.12, GLW(0xffb8d6, 0.75), side * 0.45, -0.15, 0.68, 1.3, 0.8, 0.3);
     });
-    // Cute Pink Ribbon Bow on right ear
     const bow = new T.Group();
     bow.position.set(0.52, 0.7, 0.3);
     head.add(bow);
     sp(bow, 0.16, pinkMat, -0.14, 0, 0, 1.4, 0.8, 0.6);
     sp(bow, 0.16, pinkMat, 0.14, 0, 0, 1.4, 0.8, 0.6);
-    sp(bow, 0.1, whiteMat, 0, 0, 0.05); // center knot
+    sp(bow, 0.1, whiteMat, 0, 0, 0.05);
   }
 
-  // Gaming Headphones around neck with glowing paw prints
+  // Gaming Headphones
   [-1, 1].forEach(side => {
     const hp = add(g, new T.CylinderGeometry(0.2, 0.2, 0.14, 16), glowMat, side * 0.62, 1.58, 0.1);
     hp.rotation.z = Math.PI / 2;
-    // Glow paw on headphones
     glow(g, side * 0.68, 1.58, 0.1, glowHeadphone, 1.5);
   });
-  // Headphone band behind neck
   add(g, new T.TorusGeometry(0.58, 0.06, 8, 20, Math.PI), M(0x222230), 0, 1.58, -0.1).rotation.x = Math.PI / 2;
 
-  // 3. Arms & Paws
+  // Arms
   [-1, 1].forEach(side => {
     const ar = new T.Group();
     ar.position.set(side * 0.62, 1.42, 0);
     g.add(ar);
-    // Sleeve
     cy(ar, 0.17, 0.52, hoodieMat, 0, -0.22, 0, 0.15, 12);
-    // Fur paw
     sp(ar, 0.17, furMat, 0, -0.52, 0, 1, 1, 1);
     arms.push(ar);
   });
 
-  // 4. Legs & Sneakers
+  // Legs & Sneakers
   [-1, 1].forEach(side => {
     const lg = new T.Group();
     lg.position.set(side * 0.24, 0.72, 0);
     g.add(lg);
-    // Pants / Legs
     cy(lg, 0.16, 0.6, (isWhite ? furMat : hoodieMat), 0, -0.28, 0, 0.16, 12);
-    // Sneakers with white sole
     const shoe = bx(lg, 0.34, 0.22, 0.52, (isWhite ? pinkMat : M(0x111116)), 0, -0.62, 0.06);
-    bx(shoe, 0.36, 0.07, 0.54, whiteMat, 0, -0.08, 0); // white rubber sole
-    bx(shoe, 0.28, 0.12, 0.16, whiteMat, 0, 0.04, 0.2); // white toe cap
+    bx(shoe, 0.36, 0.07, 0.54, whiteMat, 0, -0.08, 0);
+    bx(shoe, 0.28, 0.12, 0.16, whiteMat, 0, 0.04, 0.2);
     legs.push(lg);
   });
 
-  // 5. Fluffy Tail
+  // Tail
   const tailBase = new T.Group();
   tailBase.position.set(0, 0.85, -0.48);
   tailBase.rotation.x = -1.1;
@@ -1280,7 +1380,6 @@ function mkChibiCat(isWhite, scale = 0.85) {
     tail.push(segment);
     parentBone = segment;
   }
-  // Pink Bow on White Cat's tail tip
   if (isWhite) {
     const tBow = new T.Group();
     tBow.position.set(0, 0.25, 0);
@@ -1289,13 +1388,22 @@ function mkChibiCat(isWhite, scale = 0.85) {
     sp(tBow, 0.12, pinkMat, 0.1, 0, 0, 1.3, 0.7, 0.5);
   }
 
+  // Attach vehicles to cat
+  const bike = createRideBicycle(isWhite);
+  g.add(bike.bg);
+
+  const board = createRideBoard(isWhite);
+  g.add(board);
+
+  const car = createRideCar(isWhite);
+  g.add(car.g);
+
   S.add(g);
-  const catObj = { g, head, arms, legs, tail, isWhite };
+  const catObj = { g, head, arms, legs, tail, isWhite, bike, board, car };
   cats.push(catObj);
   return catObj;
 }
 
-// Spawn Mèo Đen & Mèo Trắng at center plaza
 const blackCat = mkChibiCat(false, 0.85);
 blackCat.g.position.set(-5.5, 0, -4.0);
 blackCat.g.rotation.y = 0.2;
@@ -1304,7 +1412,6 @@ const whiteCat = mkChibiCat(true, 0.85);
 whiteCat.g.position.set(-2.5, 0, -4.0);
 whiteCat.g.rotation.y = -0.2;
 
-// Mini laptop for Coding animation
 function createLaptop(g) {
   const lp = new T.Group();
   g.add(lp);
@@ -1323,7 +1430,6 @@ function createLaptop(g) {
   return lp;
 }
 
-// Cat State and Character management
 const catsState = [[blackCat, -5.5, -4.0, 0.2], [whiteCat, -2.5, -4.0, -0.2]].map(([cat, x, z, y0], i) => {
   const cv = document.createElement('canvas');
   cv.width = cv.height = 128;
@@ -1340,6 +1446,7 @@ const catsState = [[blackCat, -5.5, -4.0, 0.2], [whiteCat, -2.5, -4.0, -0.2]].ma
     hx: x, hz: z,
     y0,
     ph: 0,
+    ride: 'walk', // 'walk' | 'bike' | 'board' | 'car'
     clip: 'idle',
     st: { lx: 0, rx: 0, la: 0, ra: 0, laz: 0.12, raz: -0.12, py: 0, hx: 0, hy: 0, hz: 0, bx: 0, yaw: y0, tl: 0.2, lap: 0 },
     lap: createLaptop(cat.g),
@@ -1349,9 +1456,9 @@ const catsState = [[blackCat, -5.5, -4.0, 0.2], [whiteCat, -2.5, -4.0, -0.2]].ma
 });
 
 /* ====================================================================
-   7. SOUND & AUDIO (Synthesized 8-bit Web Audio chiptune)
+   8. SOUND & AUDIO (Web Audio chiptune, bell, horn, meow)
 ==================================================================== */
-let AU, musicOn = false, audioStep = 0, musicTimer;
+let AU, musicOn = false, audioStep = 0;
 const CHORDS = [
   [220, 261.6, 329.6, 392],   // Am7
   [174.6, 220, 261.6, 329.6], // Fmaj7
@@ -1359,9 +1466,16 @@ const CHORDS = [
   [196, 246.9, 293.7, 349.2]  // G7
 ];
 
+function initAudio() {
+  if (!AU) {
+    AU = new (window.AudioContext || window.webkitAudioContext)();
+    setInterval(musicTick, 380);
+  }
+}
+
 function meow(pitch = 1.0) {
   try {
-    AU = AU || new (window.AudioContext || window.webkitAudioContext)();
+    initAudio();
     const t = AU.currentTime, osc = AU.createOscillator(), filter = AU.createBiquadFilter(), gain = AU.createGain();
     osc.type = 'sawtooth';
     filter.frequency.value = 1900;
@@ -1376,6 +1490,50 @@ function meow(pitch = 1.0) {
     gain.connect(AU.destination);
     osc.start(t);
     osc.stop(t + 0.52);
+  } catch (e) {}
+}
+
+// Bicycle Bell Ding-Ding
+function ringBell() {
+  try {
+    initAudio();
+    const t = AU.currentTime;
+    [ [1320, 0, 0.15], [1760, 0.12, 0.25] ].forEach(([freq, delay, dur]) => {
+      const osc = AU.createOscillator(), gain = AU.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t + delay);
+      gain.gain.linearRampToValueAtTime(0.2, t + delay + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + delay + dur);
+      osc.connect(gain);
+      gain.connect(AU.destination);
+      osc.start(t + delay);
+      osc.stop(t + delay + dur);
+    });
+  } catch (e) {}
+}
+
+// Car Horn Honk-Honk
+function honkHorn() {
+  try {
+    initAudio();
+    const t = AU.currentTime;
+    [440, 554].forEach(freq => {
+      const osc = AU.createOscillator(), gain = AU.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.15, t + 0.02);
+      gain.gain.setValueAtTime(0.15, t + 0.15);
+      gain.gain.linearRampToValueAtTime(0, t + 0.18);
+      gain.gain.linearRampToValueAtTime(0.15, t + 0.22);
+      gain.gain.setValueAtTime(0.15, t + 0.35);
+      gain.gain.linearRampToValueAtTime(0, t + 0.38);
+      osc.connect(gain);
+      gain.connect(AU.destination);
+      osc.start(t);
+      osc.stop(t + 0.4);
+    });
   } catch (e) {}
 }
 
@@ -1404,10 +1562,7 @@ function musicTick() {
 }
 
 $('#mus').onclick = () => {
-  if (!AU) {
-    AU = new (window.AudioContext || window.webkitAudioContext)();
-    musicTimer = setInterval(musicTick, 380);
-  }
+  initAudio();
   musicOn = !musicOn;
   AU.resume();
   $('#mus').textContent = musicOn ? '🎵 Nhạc: Bật' : '🎵 Nhạc: Tắt';
@@ -1415,7 +1570,7 @@ $('#mus').onclick = () => {
 };
 
 /* ====================================================================
-   8. CAMERA VIEWS & DAY/NIGHT SWITCHER
+   9. CAMERA, DAY/NIGHT & PHOTO SCREENSHOT
 ==================================================================== */
 const curCam = { az: 0.5, pl: 0.45, dist: 60 };
 const goalCam = { az: 0.5, pl: 0.45, dist: 60 };
@@ -1428,12 +1583,11 @@ $('#rot').onclick = () => {
   $('#rot').classList.toggle('on', autoRotate);
 };
 
-// Preset Camera Views
 const CAM_VIEWS = {
-  v1: [-2, 3, -4, 58, 0.45, 0.3],     // Biệt thự toàn cảnh
-  v2: [-4.0, 2.0, -4.0, 14, 0.25, 0.1], // Cận cảnh 2 chú mèo
-  v3: [0, 1, 9, 32, 0.4, 0],           // Đường phố & siêu xe
-  v4: [16, 2, 4, 24, 0.32, -0.6]       // Cổng Stargate & hồ
+  v1: [-2, 3, -4, 58, 0.45, 0.3],
+  v2: [-4.0, 2.0, -4.0, 14, 0.25, 0.1],
+  v3: [0, 1, 9, 32, 0.4, 0],
+  v4: [16, 2, 4, 24, 0.32, -0.6]
 };
 Object.keys(CAM_VIEWS).forEach(k => {
   $('#' + k).onclick = () => {
@@ -1445,7 +1599,6 @@ Object.keys(CAM_VIEWS).forEach(k => {
   };
 });
 
-// Day / Night cycle toggle
 let isDay = false;
 $('#btn-dn').onclick = () => {
   isDay = !isDay;
@@ -1458,7 +1611,23 @@ $('#btn-dn').onclick = () => {
   sun.intensity = isDay ? 1.3 : 0.95;
 };
 
-// Mouse & Touch Orbit Controls
+// Photo Capture Feature
+$('#btn-photo').onclick = () => {
+  const flash = $('#flash-overlay');
+  flash.style.opacity = '0.85';
+  playTone(880, 0.08, 0.15, 'sine');
+  setTimeout(() => playTone(1320, 0.12, 0.2, 'sine'), 90);
+  setTimeout(() => { flash.style.opacity = '0'; }, 120);
+
+  R.render(S, cam);
+  const dataURL = R.domElement.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataURL;
+  a.download = 'TT_Lang_Meo_3D_' + Date.now() + '.png';
+  a.click();
+  showBubble(catsState[PL.act], '📸 Đã chụp ảnh!');
+};
+
 const canvasEl = $('#c');
 canvasEl.onpointerdown = e => dragPoint = e;
 addEventListener('pointerup', () => dragPoint = null);
@@ -1474,40 +1643,99 @@ canvasEl.addEventListener('wheel', e => {
 }, { passive: true });
 
 /* ====================================================================
-   9. INTERACTIVE GAMEPLAY & ANIMATIONS
+   10. VEHICLE SWITCHING & GAMEPLAY CONTROLS
 ==================================================================== */
 const PL = { on: false, act: 0, jv: { x: 0, y: 0 }, jr: false, jq: false };
 const K = {};
 
-// Building Collision Boxes [minX, maxX, minZ, maxZ]
 const BOXES = [
-  [-11.5, 1.5, -13.0, -5.0],   // Villa
-  [4.0, 10.5, -12.0, -5.5],    // Garage
-  [-22.5, -15.5, -7.0, -1.0],  // Left house
-  [15.5, 22.5, -7.0, -1.0]     // Right house
+  [-11.5, 1.5, -13.0, -5.0],
+  [4.0, 10.5, -12.0, -5.5],
+  [-22.5, -15.5, -7.0, -1.0],
+  [15.5, 22.5, -7.0, -1.0]
 ];
 
+const RIDE_TYPES = ['walk', 'bike', 'board', 'car'];
+
+function setVehicleMode(mode) {
+  catsState.forEach(cs => {
+    cs.ride = mode;
+    cs.cat.bike.bg.visible = (mode === 'bike');
+    cs.cat.board.visible = (mode === 'board');
+    cs.cat.car.g.visible = (mode === 'car');
+  });
+  document.querySelectorAll('#rides button[data-r]').forEach(btn => {
+    btn.classList.toggle('on', btn.dataset.r === mode);
+  });
+  const leader = catsState[PL.act];
+  if (mode === 'bike') {
+    ringBell();
+    showBubble(leader, '🚲 Đạp xe!');
+  } else if (mode === 'board') {
+    playTone(520, 0.25, 0.15, 'sine');
+    showBubble(leader, '🛹 Ván trượt!');
+  } else if (mode === 'car') {
+    honkHorn();
+    showBubble(leader, '🏎️ Lái siêu xe!');
+  } else {
+    meow(1.1);
+    showBubble(leader, '🚶 Đi bộ!');
+  }
+}
+
+document.querySelectorAll('#rides button[data-r]').forEach(b => {
+  b.onclick = () => setVehicleMode(b.dataset.r);
+});
+
+function triggerBellOrHorn() {
+  const curRide = catsState[PL.act].ride;
+  if (curRide === 'bike') {
+    ringBell();
+    showBubble(catsState[PL.act], '🔔 Kính coong!');
+  } else if (curRide === 'car') {
+    honkHorn();
+    showBubble(catsState[PL.act], '📢 Bíp bíp!');
+  } else {
+    meow(catsState[PL.act].i ? 1.3 : 0.9);
+    showBubble(catsState[PL.act], '🐾 Meow!');
+  }
+}
+
+$('#btn-bell').onclick = triggerBellOrHorn;
+$('#bb').onpointerdown = triggerBellOrHorn;
+$('#vb').onpointerdown = () => {
+  const curIdx = RIDE_TYPES.indexOf(catsState[PL.act].ride);
+  const nextMode = RIDE_TYPES[(curIdx + 1) % RIDE_TYPES.length];
+  setVehicleMode(nextMode);
+};
+
 function controlPlayerCat(c, tg, dt) {
-  // Q / E to rotate camera
   if (K.q) goalCam.az += dt * 2.4;
   if (K.e) goalCam.az -= dt * 2.4;
 
   let ix = (K.d || K.arrowright ? 1 : 0) - (K.a || K.arrowleft ? 1 : 0) + PL.jv.x;
   let iz = (K.w || K.arrowup ? 1 : 0) - (K.s || K.arrowdown ? 1 : 0) + PL.jv.y;
   const l = Math.hypot(ix, iz);
-  let run = false, isMoving = l > 0.08;
+  let isMoving = l > 0.08;
+
+  // Speed according to vehicle mode
+  let baseSpeed = 4.5, sprintSpeed = 8.5;
+  if (c.ride === 'bike') { baseSpeed = 7.5; sprintSpeed = 12.0; }
+  else if (c.ride === 'board') { baseSpeed = 8.5; sprintSpeed = 13.5; }
+  else if (c.ride === 'car') { baseSpeed = 10.5; sprintSpeed = 16.5; }
+
+  const run = K.shift || (l > 0.75 && PL.jr);
+  const curSpeed = run ? sprintSpeed : baseSpeed;
 
   if (isMoving) {
     if (l > 1) { ix /= l; iz /= l; }
     const a = curCam.az;
     const mx = -Math.sin(a) * iz + Math.cos(a) * ix;
     const mz = -Math.cos(a) * iz - Math.sin(a) * ix;
-    run = K.shift || (l > 0.75 && PL.jr);
-    const speed = run ? 8.5 : 4.5;
 
-    // Smooth Wall Sliding (separate X and Z collision checks)
-    const nextX = c.x + mx * speed * dt;
-    const nextZ = c.z + mz * speed * dt;
+    // Smooth Wall Sliding
+    const nextX = c.x + mx * curSpeed * dt;
+    const nextZ = c.z + mz * curSpeed * dt;
     let hitX = false, hitZ = false;
     BOXES.forEach(b => {
       if (nextX > b[0] && nextX < b[1] && c.z > b[2] && c.z < b[3]) hitX = true;
@@ -1516,16 +1744,15 @@ function controlPlayerCat(c, tg, dt) {
     if (!hitX) c.x = nextX;
     if (!hitZ) c.z = nextZ;
 
-    // Island boundary clamp
     c.x = Math.max(-28, Math.min(28, c.x));
     c.z = Math.max(-19, Math.min(25, c.z));
 
     tg.yaw = Math.atan2(mx, mz);
-    c.ph += dt * (run ? 16 : 10);
+    c.ph += dt * (run ? 18 : 12);
 
-    // Stargate Portal Teleportation! (walk near 16, 4)
+    // Stargate Teleportation
     if (Math.hypot(c.x - 16, c.z - 4) < 1.8) {
-      c.x = -18; c.z = 4; // teleport to opposite waterfall pond
+      c.x = -18; c.z = 4;
       meow(1.5);
       showBubble(c, '🌀 Dịch chuyển!');
     }
@@ -1535,37 +1762,84 @@ function controlPlayerCat(c, tg, dt) {
 
   // Jump logic
   if (PL.jq && (c.jy || 0) <= 0.001 && !c.air) {
-    c.vy = 8.5;
+    c.vy = (c.ride === 'walk' ? 8.5 : 9.5);
     c.air = true;
-    meow(c.i ? 1.3 : 0.9);
+    if (c.ride === 'bike') ringBell();
+    else if (c.ride === 'car') honkHorn();
+    else meow(c.i ? 1.3 : 0.9);
   }
   PL.jq = false;
   c.vy = (c.vy || 0) - 24 * dt;
   c.jy = (c.jy || 0) + c.vy * dt;
   if (c.jy <= 0) { c.jy = 0; c.vy = 0; c.air = false; }
 
-  if (c.air) {
-    Object.assign(tg, { laz: 0.95, raz: -0.95, lx: -0.65, rx: 0.45, tl: 0.5 });
-  } else if (isMoving) {
-    const w = Math.sin(c.ph) * (run ? 1.1 : 0.75) * 0.95;
-    Object.assign(tg, { lx: w, rx: -w, la: -w * 0.8, ra: w * 0.8, tl: run ? 0.6 : 0.3 });
+  // Vehicle-specific pose updates
+  if (c.ride === 'bike') {
+    // Pedaling animation
+    if (isMoving) {
+      c.cat.bike.crank.rotation.x += curSpeed * dt * 3.8;
+      c.cat.bike.fWheel.rotation.x += curSpeed * dt * 4.2;
+      c.cat.bike.rWheel.rotation.x += curSpeed * dt * 4.2;
+      const pa = c.cat.bike.crank.rotation.x;
+      Object.assign(tg, {
+        lx: Math.sin(pa) * 0.7 - 0.25,
+        rx: -Math.sin(pa) * 0.7 - 0.25,
+        la: -1.0, ra: -1.0,
+        laz: 0.32, raz: -0.32,
+        tl: 0.4, hx: -0.15
+      });
+    } else {
+      Object.assign(tg, { lx: -0.2, rx: 0.4, la: -1.0, ra: -1.0, laz: 0.32, raz: -0.32, hx: 0 });
+    }
+    tg.py = (c.jy || 0) + 0.2;
+    c.cat.g.rotation.z = isMoving ? -ix * 0.15 : 0; // bicycle banking
+  } else if (c.ride === 'board') {
+    // Hoverboard stance
+    Object.assign(tg, {
+      lx: -0.35, rx: 0.35,
+      la: -0.4, ra: 0.4,
+      laz: 0.55, raz: -0.55,
+      tl: 0.6, hx: 0
+    });
+    tg.py = (c.jy || 0) + 0.32 + Math.sin(elapsed * 5) * 0.05;
+    c.cat.g.rotation.z = isMoving ? -ix * 0.22 : 0;
+  } else if (c.ride === 'car') {
+    // Supercar driving pose
+    if (isMoving) {
+      c.cat.car.wheels.forEach(w => w.rotation.x += curSpeed * dt * 4.0);
+    }
+    Object.assign(tg, {
+      lx: -0.9, rx: -0.9,
+      la: -1.1, ra: -1.1,
+      laz: 0.2, raz: -0.2,
+      tl: 0.3, hx: 0
+    });
+    tg.py = (c.jy || 0) + 0.18;
+    c.cat.g.rotation.z = 0;
+  } else {
+    // Standard walking / jumping
+    c.cat.g.rotation.z = 0;
+    if (c.air) {
+      Object.assign(tg, { laz: 0.95, raz: -0.95, lx: -0.65, rx: 0.45, tl: 0.5 });
+    } else if (isMoving) {
+      const w = Math.sin(c.ph) * (run ? 1.1 : 0.75) * 0.95;
+      Object.assign(tg, { lx: w, rx: -w, la: -w * 0.8, ra: w * 0.8, tl: run ? 0.6 : 0.3 });
+    }
+    tg.py = c.jy / 0.85 + (isMoving && !c.air ? Math.abs(Math.sin(c.ph)) * 0.08 : 0);
   }
-  tg.py = c.jy / 0.85 + (isMoving && !c.air ? Math.abs(Math.sin(c.ph)) * 0.08 : 0);
 }
 
-// Companion Cat Follow AI
 function followPlayerCat(c) {
   const leader = catsState[PL.act];
   const dx = leader.x - c.x, dz = leader.z - c.z;
   const d = Math.hypot(dx, dz);
-  return d > 2.8 ? { tx: leader.x - (dx / d) * 2.2, tz: leader.z - (dz / d) * 2.2 } : { tx: c.x, tz: c.z };
+  return d > 3.0 ? { tx: leader.x - (dx / d) * 2.4, tz: leader.z - (dz / d) * 2.4 } : { tx: c.x, tz: c.z };
 }
 
-// Visual Emote Bubbles above Cat
 function showBubble(c, text) {
   const ctx = c.cv.getContext('2d');
   ctx.clearRect(0, 0, 128, 128);
-  ctx.font = 'bold 36px system-ui';
+  ctx.font = 'bold 34px system-ui';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#ffffff';
@@ -1602,7 +1876,7 @@ function setPlayMode(active) {
   if (active) {
     autoRotate = false;
     $('#rot').classList.remove('on');
-    goalCam.dist = 13;
+    goalCam.dist = 14;
     goalCam.pl = 0.32;
   }
   markPlayerIcon();
@@ -1623,6 +1897,12 @@ addEventListener('keydown', e => {
   if (!PL.on) return;
   if (k === ' ') { PL.jq = true; e.preventDefault(); }
   if (k === 'tab') { e.preventDefault(); $('#sw').click(); }
+  if (k === 'v' || k === 'f') {
+    const curIdx = RIDE_TYPES.indexOf(catsState[PL.act].ride);
+    const nextMode = RIDE_TYPES[(curIdx + 1) % RIDE_TYPES.length];
+    setVehicleMode(nextMode);
+  }
+  if (k === 'b') triggerBellOrHorn();
   if (k === 'm' || k === 'c') {
     meow(PL.act ? 1.3 : 0.9);
     showBubble(catsState[PL.act], '🐾 Meow!');
@@ -1630,7 +1910,7 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => K[e.key.toLowerCase()] = false);
 
-// Mobile Joystick & Action Buttons
+// Mobile Joystick
 const joyEl = $('#joy'), joyStick = $('#joy i');
 function handleJoy(e) {
   const r = joyEl.getBoundingClientRect();
@@ -1650,7 +1930,7 @@ $('#mb').onpointerdown = () => {
 };
 
 /* ====================================================================
-   10. ANIMATION CLIPS & CINEMATIC SHORT MOVIE
+   11. ANIMATION CLIPS & CINEMATIC MOVIE
 ==================================================================== */
 const sn = Math.sin, ab = Math.abs, PI = Math.PI;
 const DEF_ST = { lx: 0, rx: 0, la: 0, ra: 0, laz: 0.12, raz: -0.12, py: 0, hx: 0, hy: 0, hz: 0, bx: 0, yaw: 0, tl: 0.2, lap: 0 };
@@ -1721,7 +2001,7 @@ document.querySelectorAll('#who button').forEach(b => {
 // Cinematic Movie Shots
 const MOVIE_SHOTS = [
   ['Chào mừng bạn đến với Làng TT Trung Tín 👋', 4.5, 'wave', 'wave', 15, 0.22, 0, 0],
-  ['Dạo quanh ngôi làng bình yên', 6.0, 'walk', 'walk', 22, 0.4, 0.3, 0.12],
+  ['Dạo quanh ngôi làng bình yên 🚶', 6.0, 'walk', 'walk', 22, 0.4, 0.3, 0.12],
   ['Chạy đua siêu tốc trên đường phố! 💨', 4.5, 'run', 'run', 18, 0.24, 0, 0.3],
   ['Nhảy múa rộn ràng cùng âm nhạc 🎵', 5.0, 'dance', 'dance', 14, 0.22, 0.2, 0.3],
   ['Cùng nhau lập trình: Dream Big, Code Better 💻', 6.5, 'code', 'code', 11, 0.22, 0.4, 0.05],
@@ -1756,7 +2036,7 @@ $('#play').onclick = () => {
 };
 
 /* ====================================================================
-   11. MAIN RAF LOOP (Frame-Rate Independent Smooth Rendering)
+   12. MAIN RAF LOOP (Smooth Delta-Time Engine)
 ==================================================================== */
 let lastTime = performance.now(), elapsed = 0;
 
@@ -1766,10 +2046,8 @@ function renderLoop(now) {
   lastTime = now;
   elapsed += dt;
 
-  // Run dynamic object updates
   anim.forEach(fn => fn(elapsed, dt));
 
-  // Cinematic movie timeline update
   if (mv.on) {
     mv.t += dt;
     if (mv.t >= TOTAL_MOVIE_TIME) mv.t = 0;
@@ -1797,13 +2075,12 @@ function renderLoop(now) {
     goalLook.set((catsState[0].x + catsState[1].x) / 2, 2, (catsState[0].z + catsState[1].z) / 2);
   }
 
-  // Camera tracking in Play mode
   if (PL.on) {
     const activeLeader = catsState[PL.act];
     goalLook.set(activeLeader.x, 2, activeLeader.z);
   }
 
-  // Frame-rate independent camera damping
+  // Smooth camera interpolation
   if (autoRotate && !dragPoint) goalCam.az += dt * 0.08;
   const dampK = 1 - Math.exp(-9 * dt);
   curCam.az += (goalCam.az - curCam.az) * dampK;
@@ -1811,7 +2088,6 @@ function renderLoop(now) {
   curCam.dist += (goalCam.dist - curCam.dist) * dampK;
   targetLook.lerp(goalLook, dampK);
 
-  // Set camera in spherical orbit around targetLook
   cam.position.set(
     targetLook.x + Math.sin(curCam.az) * Math.cos(curCam.pl) * curCam.dist,
     targetLook.y + Math.sin(curCam.pl) * curCam.dist,
@@ -1819,7 +2095,7 @@ function renderLoop(now) {
   );
   cam.lookAt(targetLook);
 
-  // Update Cat Animations and IK
+  // Update Cats
   catsState.forEach(c => {
     const cat = c.cat, idx = c.i;
     const isPlayerControlled = PL.on && PL.act === idx;
@@ -1835,26 +2111,64 @@ function renderLoop(now) {
       controlPlayerCat(c, targetState, dt);
     } else if (distToGoal > 0.15) {
       const isFar = distToGoal > 4.5;
-      const step = Math.min(distToGoal, (isFar ? 8.5 : 4.5) * dt);
-      const speed = step / Math.max(dt, 0.001);
+      let spd = (isFar ? 8.5 : 4.5);
+      if (c.ride === 'bike') spd = (isFar ? 12.0 : 7.5);
+      else if (c.ride === 'board') spd = (isFar ? 13.5 : 8.5);
+      else if (c.ride === 'car') spd = (isFar ? 16.5 : 10.5);
+
+      const step = Math.min(distToGoal, spd * dt);
       c.x += (dx / distToGoal) * step;
       c.z += (dz / distToGoal) * step;
-      c.ph += dt * (isFar ? 16 : 10);
-      const w = sn(c.ph) * Math.min(1, speed / 3.5) * 0.85;
-      Object.assign(targetState, {
-        lx: w, rx: -w, la: -w * 0.8, ra: w * 0.8,
-        laz: 0.12, raz: -0.12,
-        py: ab(sn(c.ph)) * 0.07,
-        yaw: Math.atan2(dx, dz),
-        lap: 0, hx: 0, hz: 0, bx: 0
-      });
+      c.ph += dt * (isFar ? 18 : 12);
+      targetState.yaw = Math.atan2(dx, dz);
+
+      // Follower vehicle animation
+      if (c.ride === 'bike') {
+        c.cat.bike.crank.rotation.x += spd * dt * 3.8;
+        c.cat.bike.fWheel.rotation.x += spd * dt * 4.2;
+        c.cat.bike.rWheel.rotation.x += spd * dt * 4.2;
+        const pa = c.cat.bike.crank.rotation.x;
+        Object.assign(targetState, {
+          lx: Math.sin(pa) * 0.7 - 0.25,
+          rx: -Math.sin(pa) * 0.7 - 0.25,
+          la: -1.0, ra: -1.0,
+          laz: 0.32, raz: -0.32,
+          tl: 0.4, hx: -0.15
+        });
+        targetState.py = 0.2;
+      } else if (c.ride === 'board') {
+        Object.assign(targetState, { lx: -0.35, rx: 0.35, la: -0.4, ra: 0.4, laz: 0.55, raz: -0.55, tl: 0.6 });
+        targetState.py = 0.32 + Math.sin(elapsed * 5) * 0.05;
+      } else if (c.ride === 'car') {
+        c.cat.car.wheels.forEach(w => w.rotation.x += spd * dt * 4.0);
+        Object.assign(targetState, { lx: -0.9, rx: -0.9, la: -1.1, ra: -1.1, laz: 0.2, raz: -0.2, tl: 0.3 });
+        targetState.py = 0.18;
+      } else {
+        const w = sn(c.ph) * 0.85;
+        Object.assign(targetState, {
+          lx: w, rx: -w, la: -w * 0.8, ra: w * 0.8,
+          laz: 0.12, raz: -0.12,
+          py: ab(sn(c.ph)) * 0.07,
+          lap: 0, hx: 0, hz: 0, bx: 0
+        });
+      }
     } else if (PL.on) {
       targetState.yaw = Math.atan2(catsState[PL.act].x - c.x, catsState[PL.act].z - c.z);
+      if (c.ride === 'bike') {
+        Object.assign(targetState, { lx: -0.2, rx: 0.4, la: -1.0, ra: -1.0, laz: 0.32, raz: -0.32 });
+        targetState.py = 0.2;
+      } else if (c.ride === 'board') {
+        Object.assign(targetState, { lx: -0.35, rx: 0.35, la: -0.4, ra: 0.4, laz: 0.55, raz: -0.55 });
+        targetState.py = 0.32;
+      } else if (c.ride === 'car') {
+        Object.assign(targetState, { lx: -0.9, rx: -0.9, la: -1.1, ra: -1.1 });
+        targetState.py = 0.18;
+      }
     } else {
       targetState.yaw += c.y0;
     }
 
-    // Smooth state blending
+    // Blend joint angles
     const s = c.st, blendSpeed = Math.min(1, dt * 16);
     for (const prop in DEF_ST) {
       if (prop === 'yaw') {
@@ -1864,9 +2178,8 @@ function renderLoop(now) {
         s[prop] += (targetState[prop] - s[prop]) * blendSpeed;
       }
     }
-    if (isPlayerControlled) s.py = targetState.py;
+    s.py = targetState.py;
 
-    // Apply joint transforms
     cat.legs[0].rotation.x = s.lx;
     cat.legs[1].rotation.x = s.rx;
     cat.arms[0].rotation.x = s.la;
@@ -1877,7 +2190,6 @@ function renderLoop(now) {
     cat.g.position.set(c.x, s.py * 0.85, c.z);
     cat.g.rotation.set(s.bx, s.yaw, 0);
 
-    // Dynamic tail sinusoidal sway
     cat.tail.forEach((seg, j) => {
       seg.rotation.z = sn(elapsed * 3.2 - j * 0.7 + idx) * (0.14 + s.tl * 0.45);
     });
@@ -1891,7 +2203,7 @@ function renderLoop(now) {
 requestAnimationFrame(renderLoop);
 
 /* ====================================================================
-   12. MODAL & INTRO POPUP MANAGEMENT
+   13. MODAL & INTRO POPUP MANAGEMENT
 ==================================================================== */
 const modal = $('#modal');
 function openModal() { if (modal) modal.classList.add('show'); }
@@ -1906,7 +2218,6 @@ if (modal) {
 }
 addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// Show intro modal on first load
 if (!sessionStorage.getItem('intro_seen')) {
   openModal();
   sessionStorage.setItem('intro_seen', '1');

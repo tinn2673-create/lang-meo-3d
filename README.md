@@ -40,34 +40,53 @@
 
 ---
 
+### 🚲 Hệ thống Phương tiện có thể cưỡi (Rideable Vehicles):
+1. **🚲 Xe đạp thể thao (Bicycle):**
+   * Khung xe thể thao sơn màu đặc trưng (Xanh cho Mèo Đen, Hồng cho Mèo Trắng), có chuông vàng, nan hoa và lốp cao su.
+   * Chú mèo ngồi lên yên xe, 2 tay cầm ghi-đông, **2 chân đạp bàn đạp xoay tròn nhịp nhàng theo tốc độ di chuyển**, bánh xe quay tít và xe nghiêng khi vào cua.
+   * Tốc độ: 7.5 m/s (chạy nước rút 12.0 m/s), chuông xe reo `Kính coong! 🔔`.
+2. **🛹 Ván trượt điện tương lai (Neon Hoverboard):**
+   * Ván trượt phát sáng viền neon (Cyan / Magenta) bay lơ lửng 0.2m trên mặt đất với 4 động cơ phản lực mini.
+   * Chú mèo đứng tư thế trượt ván siêu ngầu, lướt êm ru quanh làng với tốc độ lên đến 13.5 m/s.
+3. **🏎️ Lái siêu xe thể thao (Convertible Supercar):**
+   * Mui trần thể thao với đèn pha rực sáng, đèn hậu đỏ và bánh xe quay.
+   * Chú mèo ngồi ghế lái điều khiển siêu xe vi vu với vận tốc tối đa lên tới 16.5 m/s, còi xe kêu `Bíp bíp! 📢`.
+
+---
+
 ### 🏞️ Ngôi làng trên đảo bay (Floating Island Diorama):
 1. **Biệt thự TT Trung Tín (Main Villa):** Nhà gỗ 2 tầng phong cách châu Âu, móng đá kiên cố, mái ngói xanh tím, ống khói bốc khói nhẹ, cửa sổ sáng đèn ấm áp, bồn hoa rực rỡ và biển hiệu vương miện TT phát sáng.
 2. **Gara & Sân thượng thư giãn:** Có siêu xe thể thao, sân thượng có bàn ghế và dù che nắng; biển quảng cáo hologram mèo phát sáng `</>`.
 3. **Drone giao hàng (Delivery Drone):** Quadcopter 4 cánh quạt quay tít bay lượn trên bầu trời, chở thùng hàng gỗ.
-4. **Cổng không gian Stargate (Magic Portal):** Vòng đá cổ ngữ với lốc xoáy năng lượng xanh phát sáng kỳ ảo. **Đặc biệt:** Bạn có thể điều khiển chú mèo bước vào cổng để **dịch chuyển tức thời** sang bên kia hòn đảo!
+4. **Cổng không gian Stargate (Magic Portal):** Vòng đá cổ ngữ với lốc xoáy năng lượng xanh phát sáng kỳ ảo. **Đặc biệt:** Bạn có thể điều khiển chú mèo (dù đang đi bộ, đạp xe hay lái xe) bước vào cổng để **dịch chuyển tức thời** sang bên kia hòn đảo!
 5. **Thác nước & Hồ cá chép:** Vách đá có dòng thác đổ xuống hồ nước trong xanh, hoa súng bập bềnh và cá chép vàng nhảy vọt lên mặt nước.
 6. **Tháp quan sát thiên văn:** Tháp đá cổ kính có mái vòm xanh và kính viễn vọng hướng lên các vì sao.
 7. **Cối xay gió & Guồng nước:** Cánh quạt cối xay gió khổng lồ và bánh xe nước quay đều bên dòng suối.
 8. **Cây hoa anh đào (Sakura) & Hiệu ứng thời tiết:** Cây hoa anh đào rực rỡ với hàng trăm cánh hoa hồng rơi lững lờ theo gió cùng đàn đom đóm phát sáng về đêm.
 9. **Chuyển đổi Ngày / Đêm:** Bấm nút **🌙 Đêm / ☀️ Ngày** để chiêm ngưỡng làng trong ánh nắng ấm ban ngày hoặc ánh neon lung linh về đêm.
-10. **Xe cộ lưu thông:** Siêu xe thể thao xanh dương có đèn pha & gầm neon, mô tô phân khối lớn và xe tay ga Vespa hồng chạy tuần hoàn quanh tuyến đường trên đảo.
+10. **Chụp ảnh Full HD (Photo Mode):** Bấm nút **📸 Chụp ảnh** góc trên để chụp và tải ngay bức ảnh 3D tuyệt đẹp về máy tính hoặc điện thoại!
 
 ---
 
 ## 🕹️ Hướng dẫn điều khiển (Controls)
 
 ### 🖥️ Trên Máy tính / Laptop:
-* **W / A / S / D** hoặc **Phím Mũi tên**: Di chuyển mèo đi tới, lui, rẽ trái, rẽ phải (hỗ trợ trượt tường êm ái).
-* **Giữ Shift**: Chạy nước rút (Sprint siêu tốc 8.5 m/s).
-* **Phím Space (Phím cách)**: Nhảy cao (kèm tiếng kêu meow).
+* **W / A / S / D** hoặc **Phím Mũi tên**: Di chuyển (Đi bộ / Đạp xe / Lái xe) - hỗ trợ trượt tường êm ái.
+* **Phím V** hoặc **F**: Đổi phương tiện (**Đi bộ 🚶** $\rightarrow$ **Xe đạp 🚲** $\rightarrow$ **Ván trượt 🛹** $\rightarrow$ **Siêu xe 🏎️**).
+* **Phím B**: Rung chuông xe đạp `Kính coong 🔔` hoặc bấm còi xe `Bíp bíp 📢`.
+* **Giữ Shift**: Tăng tốc / Chạy nước rút (lướt vù vù cực nhanh).
+* **Phím Space (Phím cách)**: Nhảy cao (bật cả xe lên qua chướng ngại vật).
 * **Phím Q / E**: Xoay góc nhìn camera sang trái / phải thuận tiện.
 * **Phím M** hoặc **C**: Kêu tiếng mèo kèm bong bóng biểu cảm `🐾 Meow!`.
-* **Phím Tab**: Chuyển đổi giữa **Mèo Đen** và **Mèo Trắng** (chú mèo còn lại sẽ tự động chạy theo sau).
+* **Phím Tab**: Chuyển đổi giữa **Mèo Đen** và **Mèo Trắng** (chú mèo còn lại sẽ tự động đi phương tiện chạy theo sau).
+* **Bấm nút 📸 Chụp ảnh**: Chụp ảnh màn hình 3D lưu về máy.
 * **Kéo chuột trái**: Xoay tự do góc nhìn 360°.
 * **Cuộn chuột (Scroll)**: Phóng to / Thu nhỏ (Zoom in / Zoom out).
 
 ### 📱 Trên Điện thoại / Máy tính bảng (Touch):
 * **Cần gạt Joystick (bên trái)**: Chạm và kéo để di chuyển (kéo mạnh > 75% để chạy nhanh).
+* **Nút đổi xe 🚲 (bên phải)**: Chuyển nhanh giữa Đi bộ, Xe đạp, Ván trượt, Siêu xe.
+* **Nút chuông 🔔 (bên phải)**: Reo chuông xe đạp / bấm còi xe.
 * **Nút nhảy ⤒ (bên phải)**: Bật nhảy cao.
 * **Nút 🐾 (bên phải)**: Kêu meow.
 * **Nút 🔁 Đổi mèo**: Hoán đổi nhân vật điều khiển.
