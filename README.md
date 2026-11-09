@@ -69,7 +69,10 @@
 12. **Tháp quan sát thiên văn:** Tháp đá cổ kính có mái vòm xanh và kính viễn vọng hướng lên các vì sao.
 13. **Cối xay gió & Guồng nước:** Cánh quạt cối xay gió khổng lồ và bánh xe nước quay đều bên dòng suối.
 14. **Cây hoa anh đào (Sakura) & Hiệu ứng thời tiết:** Cây hoa anh đào rực rỡ với hàng trăm cánh hoa hồng rơi lững lờ theo gió cùng đàn đom đóm phát sáng về đêm.
-15. **Chuyển đổi 3 Chế độ Thời Tiết:** Bấm nút **☀️ Ban Ngày / 🌅 Hoàng Hôn / 🌙 Đêm Neon** để chiêm ngưỡng làng trong ánh nắng rực rỡ, ánh chiều tà hoàng hôn lãng mạn hoặc ánh neon lung linh về đêm.
+15. **Chuyển đổi 3 Chế độ Thời Tiết & Đèn Nhà Tự Động:** Bấm nút **☀️ Ban Ngày / 🌅 Hoàng Hôn / 🌙 Đêm Neon**. 
+   * **☀️ Ban Ngày**: Đèn trong nhà (biệt thự, tiệm cafe), đèn đường và đèn lồng tự động **tắt hoàn toàn**, mặt kính cửa sổ chuyển sang màu xanh trong suốt phản chiếu mây trời.
+   * **🌅 Hoàng Hôn**: Ánh sáng cam đào lãng mạn, đèn nhà và đèn đường bắt đầu bật sáng vàng hổ phách dịu mát.
+   * **🌙 Đêm Neon**: Toàn bộ cửa sổ các ngôi nhà **bật đèn vàng rực rỡ ấm cúng**, hệ thống đèn đường Victoria và đèn lồng cổ tỏa ánh sáng lung linh khắp các nẻo đường làng.
 16. **Chụp ảnh Full HD (Photo Mode):** Bấm nút **📸 Chụp ảnh** góc trên để chụp và tải ngay bức ảnh 3D tuyệt đẹp về máy tính hoặc điện thoại!
 
 ---
