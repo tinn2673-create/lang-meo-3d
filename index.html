@@ -9,16 +9,21 @@
   --bg: #090516;
   --fg: #ffffff;
   --pk: #ff7ebb;
+  --pk-glow: rgba(255, 126, 187, 0.55);
   --bl: #38bdf8;
   --pr: #8b5cf6;
-  --deep-pr: #1e133d;
+  --pr-glow: rgba(139, 92, 246, 0.45);
   --accent-gold: #fbbf24;
-  --glass-bg: rgba(14, 10, 34, 0.76);
+  --glass-bg: rgba(13, 9, 32, 0.76);
   --glass-border: rgba(139, 92, 246, 0.32);
-  --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  --glass-hover-border: rgba(192, 132, 252, 0.6);
+  --glass-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(139, 92, 246, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.14);
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 html, body {
   height: 100%;
@@ -29,6 +34,7 @@ html, body {
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 canvas {
   display: block;
@@ -45,14 +51,14 @@ canvas {
   opacity: 0;
   pointer-events: none;
   z-index: 99999;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* HUD Top Header - Premium Indie Brand */
 .hud-top {
   position: fixed;
-  left: 18px;
-  top: calc(14px + env(safe-area-inset-top, 0px));
+  left: 20px;
+  top: calc(16px + env(safe-area-inset-top, 0px));
   pointer-events: none;
   z-index: 50;
   display: flex;
@@ -62,14 +68,14 @@ canvas {
 .hud-top b {
   font-size: 21px;
   font-weight: 800;
-  letter-spacing: 0.4px;
+  letter-spacing: -0.2px;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #f472b6 100%);
+  background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 45%, #f472b6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(168, 85, 247, 0.5));
+  filter: drop-shadow(0 2px 12px rgba(168, 85, 247, 0.5));
 }
 .hud-top span {
   display: block;
@@ -77,68 +83,118 @@ canvas {
   font-weight: 500;
   color: #c4b5fd;
   opacity: 0.92;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
 }
 
 /* Top Right Actions */
 .top-actions {
   position: fixed;
-  right: 18px;
-  top: calc(14px + env(safe-area-inset-top, 0px));
+  right: 20px;
+  top: calc(16px + env(safe-area-inset-top, 0px));
   display: flex;
   gap: 8px;
   z-index: 50;
 }
 .top-btn {
   background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   color: #f1f5f9;
   border-radius: 999px;
   padding: 8px 16px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .top-btn:hover {
   transform: translateY(-2px) scale(1.02);
-  border-color: rgba(192, 132, 252, 0.6);
+  border-color: var(--glass-hover-border);
   color: #ffffff;
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 6px 22px rgba(139, 92, 246, 0.45);
 }
 .top-btn:active {
   transform: translateY(0) scale(0.98);
 }
 
-/* Floating Help Pill - Compact & Elegant */
+/* Keyboard Shortcut HUD Card (Collapsible & Compact) */
 #hp {
   position: fixed;
-  left: 18px;
-  top: calc(70px + env(safe-area-inset-top, 0px));
-  font-size: 12px;
-  background: rgba(14, 10, 34, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(139, 92, 246, 0.28);
-  padding: 7px 14px;
-  border-radius: 12px;
+  left: 20px;
+  top: calc(74px + env(safe-area-inset-top, 0px));
+  background: rgba(13, 9, 32, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(139, 92, 246, 0.26);
+  border-radius: 14px;
+  padding: 8px 12px;
   color: #ddd6fe;
-  pointer-events: none;
-  max-width: 420px;
-  line-height: 1.5;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.3s ease;
   z-index: 40;
+  max-width: 380px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-#hp b {
-  color: #fbcfe8;
-  font-weight: 600;
+#hp.minimized .hp-grid {
+  display: none;
+}
+#hp.minimized {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.hp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #c4b5fd;
+  margin-bottom: 6px;
+}
+#hp.minimized .hp-header {
+  margin-bottom: 0;
+}
+.hp-toggle-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 13px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1;
+}
+.hp-toggle-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+.hp-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 8px;
+  font-size: 11.5px;
+}
+.k-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #e2e8f0;
+}
+kbd {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 10.5px;
+  font-family: inherit;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
 }
 
 /* Bottom Stack Controls - Unified Glassmorphism Dock */
@@ -158,18 +214,60 @@ canvas {
 .stack > * { pointer-events: auto; }
 
 .dock-card {
-  background: rgba(13, 9, 30, 0.74);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 6px 10px;
+  border-radius: 22px;
+  padding: 7px 12px;
   box-shadow: var(--glass-shadow);
   display: flex;
   flex-direction: column;
   gap: 6px;
   align-items: center;
-  max-width: 95vw;
+  max-width: 96vw;
+  transition: all 0.25s ease;
+}
+
+/* Segmented Category Tab Bar */
+.dock-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(20, 14, 46, 0.7);
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+.nav-tab {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.nav-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.nav-tab.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.85), rgba(168, 85, 247, 0.85));
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.45);
+}
+
+/* Tab Panels */
+.tab-content {
+  display: none;
+  width: 100%;
+  justify-content: center;
+}
+.tab-content.active {
+  display: flex;
 }
 
 .row {
@@ -186,13 +284,13 @@ button {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #e2e8f0;
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.24);
   border-radius: 999px;
-  padding: 7px 13px;
+  padding: 6px 12px;
   font: inherit;
   font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.15px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -207,10 +305,10 @@ button:hover {
   box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
 }
 button:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 button.on {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.85), rgba(168, 85, 247, 0.85));
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(168, 85, 247, 0.9));
   border-color: #f472b6;
   color: #ffffff;
   box-shadow: 0 0 16px rgba(168, 85, 247, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.3);
@@ -222,13 +320,13 @@ button.on {
   border: 1px solid rgba(255, 182, 217, 0.55);
   color: #ffffff;
   font-weight: 700;
-  font-size: 13px;
-  padding: 8px 18px;
+  font-size: 12.5px;
+  padding: 7px 16px;
   border-radius: 999px;
   box-shadow: 0 4px 18px rgba(236, 72, 153, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.35);
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #play:hover {
@@ -236,16 +334,16 @@ button.on {
   box-shadow: 0 6px 24px rgba(236, 72, 153, 0.65), 0 0 12px rgba(139, 92, 246, 0.5);
 }
 #play:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 
 /* Timeline progress for Movie Tour */
 #tl {
   display: flex;
   gap: 4px;
-  width: min(440px, 50vw);
-  height: 7px;
-  padding: 2px;
+  width: min(380px, 42vw);
+  height: 6px;
+  padding: 1px;
   background: rgba(18, 12, 42, 0.7);
   border-radius: 999px;
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -266,15 +364,15 @@ button.on {
   border-radius: 999px;
 }
 
-/* Rideable Vehicles Row */
+/* Rideable Vehicles styling */
 #rides button {
   font-weight: 600;
-  border-color: rgba(56, 189, 248, 0.3);
+  border-color: rgba(56, 189, 248, 0.28);
 }
 #rides button.on {
   border-color: #fbbf24;
   box-shadow: 0 0 16px rgba(251, 191, 36, 0.5);
-  background: linear-gradient(135deg, rgba(217, 119, 6, 0.85), rgba(180, 83, 9, 0.85));
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.9), rgba(180, 83, 9, 0.9));
   color: #fff;
 }
 #btn-cruise.on {
@@ -296,7 +394,7 @@ button.on {
 }
 
 #joy, #jb, #mb, #vb, #bb, #sw { display: none; }
-.play #clips, .play #who, .play #movie { display: none; }
+.play #clips, .play #who, .play #movie, .play .dock-nav { display: none; }
 .play #sw { display: inline-block; }
 
 /* Subtitle Caption for cinematic movie */
@@ -304,9 +402,9 @@ button.on {
   position: fixed;
   left: 0;
   right: 0;
-  top: 15%;
+  top: 14%;
   text-align: center;
-  font-size: clamp(22px, 4.5vw, 34px);
+  font-size: clamp(20px, 4vw, 32px);
   font-weight: 800;
   letter-spacing: 0.5px;
   pointer-events: none;
@@ -404,6 +502,15 @@ button.on {
     z-index: 60;
   }
   #hp { display: none; }
+}
+
+@media (max-width: 768px) {
+  .hud-top b { font-size: 17px; }
+  .hud-top span { font-size: 11px; }
+  .top-btn { padding: 6px 12px; font-size: 11.5px; }
+  .dock-card { padding: 5px 8px; border-radius: 18px; }
+  button { padding: 5px 10px; font-size: 11.5px; }
+  #play { padding: 6px 13px; font-size: 12px; }
 }
 
 /* Modal Popup Intro */
@@ -564,7 +671,20 @@ button.on {
 </div>
 
 <div id="hp">
-  🎮 <b>WASD</b>: Lái xe · <b>Shift</b>: Tăng tốc · <b>Space</b>: Nhảy · <b>R</b>: Chạy quanh đường 🏁 · <b>V / F</b>: Đổi xe (Xe đạp 🚲, Ván trượt 🛹, Siêu xe 🏎️) · <b>B</b>: Chuông/Còi 🔔 · <b>Q / E</b>: Xoay camera
+  <div class="hp-header">
+    <span>🎮 Phím tắt điều khiển</span>
+    <button class="hp-toggle-btn" id="hp-toggle" title="Thu gọn / Mở rộng">✕</button>
+  </div>
+  <div class="hp-grid">
+    <div class="k-chip"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>Lái xe</span></div>
+    <div class="k-chip"><kbd>Shift</kbd><span>Tăng tốc</span></div>
+    <div class="k-chip"><kbd>Space</kbd><span>Nhảy cao</span></div>
+    <div class="k-chip"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><span>Đổi xe</span></div>
+    <div class="k-chip"><kbd>R</kbd><span>Chạy vòng</span></div>
+    <div class="k-chip"><kbd>B</kbd><span>Chuông/Còi</span></div>
+    <div class="k-chip"><kbd>Q</kbd><kbd>E</kbd><span>Xoay cam</span></div>
+    <div class="k-chip"><kbd>Tab</kbd><span>Đổi mèo</span></div>
+  </div>
 </div>
 
 <!-- Mobile Touch Buttons -->
@@ -574,37 +694,59 @@ button.on {
 <button id="bb" title="Chuông / Còi">🔔</button>
 <button id="vb" title="Đổi xe">🚲</button>
 
-<!-- UI Stack at Bottom -->
+<!-- UI Stack at Bottom - Compact Glassmorphism Console -->
 <div class="stack">
   <div class="dock-card">
-    <div class="row" id="movie">
-      <button id="play">🎬 Phim ngắn</button>
-      <div id="tl"></div>
-      <div class="row" id="who" style="margin-left: 6px;">
+    <!-- Category Tabs Navigation -->
+    <div class="dock-nav">
+      <button class="nav-tab active" data-tab="tab-rides">🚗 Phương tiện</button>
+      <button class="nav-tab" data-tab="tab-views">🎥 Góc nhìn</button>
+      <button class="nav-tab" data-tab="tab-clips">🎭 Biểu cảm</button>
+    </div>
+
+    <!-- Tab 1: Phương tiện & Lái xe -->
+    <div class="tab-content active" id="tab-rides">
+      <div class="row" id="rides">
+        <button data-r="walk" class="on">🚶 Đi bộ</button>
+        <button data-r="bike">🚲 Đạp xe</button>
+        <button data-r="board">🛹 Ván trượt</button>
+        <button data-r="car">🏎️ Siêu xe</button>
+        <button id="btn-cruise">🏁 Chạy quanh đường</button>
+        <button id="btn-bell">🔔 Chuông/Còi</button>
+      </div>
+    </div>
+
+    <!-- Tab 2: Góc nhìn máy quay -->
+    <div class="tab-content" id="tab-views">
+      <div class="row" id="cams">
+        <button id="v1">🏠 Toàn cảnh</button>
+        <button id="v2">🐾 Cận mèo</button>
+        <button id="v3">🚗 Đường phố</button>
+        <button id="v4">🌀 Cổng sao</button>
+        <button id="v5">☕ Cafe Mèo</button>
+        <button id="v6">🏪 Chợ Quê</button>
+      </div>
+    </div>
+
+    <!-- Tab 3: Biểu cảm & Hành động -->
+    <div class="tab-content" id="tab-clips">
+      <div class="row" id="clips"></div>
+    </div>
+
+    <!-- Persistent Bottom Bar (Cinematic Tour & Quick Controls) -->
+    <div class="row" id="bottom-bar">
+      <div class="row" id="movie">
+        <button id="play">🎬 Phim ngắn</button>
+        <div id="tl"></div>
+      </div>
+      <div class="row" id="who">
         <button data-w="0" class="on">🐾 Cả hai</button>
         <button data-w="1">🐈‍⬛ Mèo Đen</button>
         <button data-w="2">🐱 Mèo Trắng</button>
       </div>
-    </div>
-    <div class="row" id="rides">
-      <button data-r="walk" class="on">🚶 Đi bộ</button>
-      <button data-r="bike">🚲 Đạp xe</button>
-      <button data-r="board">🛹 Ván trượt</button>
-      <button data-r="car">🏎️ Lái siêu xe</button>
-      <button id="btn-cruise">🏁 Chạy quanh đường</button>
-      <button id="btn-bell">🔔 Chuông/Còi</button>
-    </div>
-    <div class="row" id="clips"></div>
-    <div class="row">
       <button id="pm" class="on">🛑 Dừng lái</button>
-      <button id="sw">🔁 Đổi mèo (Tab)</button>
+      <button id="sw">🔁 Đổi mèo</button>
       <button id="rot" class="on">🔄 Tự xoay</button>
-      <button id="v1">🏠 Toàn cảnh</button>
-      <button id="v2">🐾 Cận mèo</button>
-      <button id="v3">🚗 Đường phố</button>
-      <button id="v4">🌀 Cổng sao</button>
-      <button id="v5">☕ Cafe Mèo</button>
-      <button id="v6">🏪 Chợ Quê</button>
       <button id="mus">🎵 Nhạc: Tắt</button>
     </div>
   </div>
@@ -943,7 +1085,7 @@ for (let i = 0; i < 8; i++) {
   oc.scale.y = 2.2;
   anim.push(t => oc.rotation.y = t * 0.8 + i);
 }
-glow(S, 0, -10, 0, 0x4aa8ff, 45);
+glow(S, 0, -10, 0, 0x38bdf8, 26);
 
 // Village Plaza & Interconnected Cobblestone Pathways
 bx(S, 20, 0.12, 8, 0x7c7c98, -1, 0.06, -3);
@@ -1587,10 +1729,10 @@ wtTex.wrapS = wtTex.wrapT = T.RepeatWrapping;
   const pg = grp(-20, 0, 6.5);
   const waterMat = new T.MeshStandardMaterial({
     color: 0x0284c7,
-    emissive: 0x0369a1,
-    emissiveIntensity: 0.65,
-    roughness: 0.15,
-    metalness: 0.1,
+    emissive: 0x0284c7,
+    emissiveIntensity: 0.32,
+    roughness: 0.12,
+    metalness: 0.15,
     transparent: true,
     opacity: 0.88
   });
@@ -2407,10 +2549,10 @@ $('#mus').onclick = () => {
    9. CAMERA, DAY/NIGHT & PHOTO SCREENSHOT
 ==================================================================== */
 // Balanced Perspective Camera Framing (Centers entire diorama with generous border room)
-const curCam = { az: 0.46, pl: 0.42, dist: 68 };
-const goalCam = { az: 0.46, pl: 0.42, dist: 68 };
-const targetLook = new T.Vector3(0, 2.8, -0.5);
-const goalLook = new T.Vector3(0, 2.8, -0.5);
+const curCam = { az: 0.46, pl: 0.40, dist: 68 };
+const goalCam = { az: 0.46, pl: 0.40, dist: 68 };
+const targetLook = new T.Vector3(0, 1.8, -0.5);
+const goalLook = new T.Vector3(0, 1.8, -0.5);
 let autoRotate = true, dragPoint = null;
 
 $('#rot').onclick = () => {
@@ -2419,7 +2561,7 @@ $('#rot').onclick = () => {
 };
 
 const CAM_VIEWS = {
-  v1: [0, 2.8, -0.5, 68, 0.42, 0.46],     // Toàn cảnh làng diorama (Perfect Overview)
+  v1: [0, 1.8, -0.5, 68, 0.40, 0.46],     // Toàn cảnh làng diorama (Perfect Overview)
   v2: [-4.0, 1.8, -4.0, 13.5, 0.22, 0.1], // Cận cảnh 2 mèo chibi
   v3: [0, 1.2, 9, 32, 0.35, 0],           // Đường phố & Xe
   v4: [16, 2.2, 4, 22, 0.28, -0.55],      // Cổng Stargate huyền ảo
@@ -2466,6 +2608,34 @@ $('#btn-dn').onclick = () => {
 };
 // Ban đêm mặc định: Bật sáng đèn nhà, đèn đường & đèn lồng lung linh khi tải trang
 updateLightingAndWindows(2);
+
+// UI Polish: Segmented Dock Tab Switching
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t === tab));
+    const targetId = tab.getAttribute('data-tab');
+    document.querySelectorAll('.tab-content').forEach(c => {
+      c.classList.toggle('active', c.id === targetId);
+    });
+  };
+});
+
+// UI Polish: Collapsible Keyboard Shortcut Badge
+const hpBox = $('#hp');
+const hpToggle = $('#hp-toggle');
+if (hpToggle && hpBox) {
+  hpToggle.onclick = (e) => {
+    e.stopPropagation();
+    hpBox.classList.toggle('minimized');
+    hpToggle.textContent = hpBox.classList.contains('minimized') ? '🎮' : '✕';
+  };
+  hpBox.onclick = () => {
+    if (hpBox.classList.contains('minimized')) {
+      hpBox.classList.remove('minimized');
+      hpToggle.textContent = '✕';
+    }
+  };
+}
 
 // Photo Capture Feature
 $('#btn-photo').onclick = () => {
