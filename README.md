@@ -47,17 +47,19 @@
 ## 🕹️ Hướng dẫn điều khiển (Controls)
 
 ### 🖥️ Trên Máy tính / Laptop:
-* **W / A / S / D** hoặc **Phím Mũi tên**: Di chuyển mèo đi tới, lui, trái, phải.
-* **Giữ Shift**: Chạy nhanh (Sprint).
-* **Phím Space (Phím cách)**: Nhảy lên cao (kèm tiếng meo meo 😸).
-* **Phím Tab**: Chuyển đổi điều khiển giữa **Mèo Đen** và **Mèo Trắng**.
-* **Kéo chuột trái**: Xoay góc nhìn camera 360°.
+* **W / A / S / D** hoặc **Phím Mũi tên**: Di chuyển mèo đi tới, lui, rẽ trái, rẽ phải (tốc độ linh hoạt, có trượt tường êm).
+* **Giữ Shift**: Chạy nước rút (Sprint cực nhanh).
+* **Phím Space (Phím cách)**: Nhảy cao (vọt lên dứt khoát kèm tiếng meo 😸).
+* **Phím Q / E**: Xoay góc nhìn camera sang trái / phải tiện lợi không cần dùng chuột.
+* **Phím M**: Kêu meo meo và hiện bong bóng cảm xúc `🐾 Meow!`.
+* **Phím Tab**: Chuyển đổi điều khiển giữa **Mèo Đen** và **Mèo Trắng** (mèo còn lại sẽ tự động đi theo bạn).
+* **Kéo chuột trái**: Xoay góc nhìn tự do 360°.
 * **Cuộn chuột (Scroll)**: Phóng to / Thu nhỏ (Zoom in / Zoom out).
 
 ### 📱 Trên Điện thoại / Máy tính bảng (Touch):
-* **Cần gạt Joystick (bên trái)**: Chạm và kéo để di chuyển mèo.
+* **Cần gạt Joystick (bên trái)**: Kéo để di chuyển, kéo mạnh hơn 75% để chạy nhanh.
 * **Nút bấm ⤒ (bên phải)**: Nhấn để nhảy.
-* **Nút 🔁 Đổi mèo**: Đổi nhân vật mèo đang điều khiển.
+* **Nút 🔁 Đổi mèo**: Đổi chú mèo đang điều khiển (chú mèo kia sẽ chạy theo sau).
 * **Chạm và vuốt màn hình**: Xoay góc nhìn camera.
 * **Chụm 2 ngón tay**: Thu phóng góc nhìn.
 
