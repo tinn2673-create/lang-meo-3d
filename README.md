@@ -77,6 +77,7 @@
 * **Giữ Shift**: Tăng tốc / Chạy nước rút (lướt vù vù cực nhanh).
 * **Phím Space (Phím cách)**: Nhảy cao (bật cả xe lên qua chướng ngại vật).
 * **Phím Q / E**: Xoay góc nhìn camera sang trái / phải thuận tiện.
+* **Phím R** hoặc **nút 🏁 Chạy quanh đường**: Bật/tắt chế độ tự động chạy vòng quanh đường đua uốn lượn của làng (camera tự bám sau cực đẹp, 2 chú mèo cùng chạy/đạp xe/lái xe đồng hành).
 * **Phím M** hoặc **C**: Kêu tiếng mèo kèm bong bóng biểu cảm `🐾 Meow!`.
 * **Phím Tab**: Chuyển đổi giữa **Mèo Đen** và **Mèo Trắng** (chú mèo còn lại sẽ tự động đi phương tiện chạy theo sau).
 * **Bấm nút 📸 Chụp ảnh**: Chụp ảnh màn hình 3D lưu về máy.

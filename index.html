@@ -185,6 +185,13 @@ button.on {
   font-weight: 600;
   border-color: #5aa8ff;
 }
+#btn-cruise.on {
+  background: linear-gradient(90deg, #ffd23a, #ff5fa8);
+  border-color: #ffffff;
+  color: #111;
+  font-weight: 800;
+  box-shadow: 0 0 18px rgba(255, 210, 58, 0.8);
+}
 #rides button.on {
   border-color: #ffd23a;
   box-shadow: 0 0 14px rgba(255, 210, 58, 0.6);
@@ -477,7 +484,7 @@ button.on {
 </div>
 
 <div id="hp">
-  🎮 <b>WASD / Mũi tên</b>: Di chuyển · <b>Shift</b>: Tăng tốc · <b>Space</b>: Nhảy · <b>V / F</b>: Đổi phương tiện (Xe đạp 🚲, Ván trượt 🛹, Siêu xe 🏎️) · <b>B</b>: Chuông/Còi · <b>M</b>: Meow · <b>Q / E</b>: Xoay camera
+  🎮 <b>WASD</b>: Lái xe · <b>Shift</b>: Tăng tốc · <b>Space</b>: Nhảy · <b>R</b>: Chạy quanh đường 🏁 · <b>V / F</b>: Đổi xe (Xe đạp 🚲, Ván trượt 🛹, Siêu xe 🏎️) · <b>B</b>: Chuông/Còi 🔔 · <b>Q / E</b>: Xoay camera
 </div>
 
 <!-- Mobile Touch Buttons -->
@@ -503,6 +510,7 @@ button.on {
     <button data-r="bike">🚲 Đạp xe</button>
     <button data-r="board">🛹 Ván trượt</button>
     <button data-r="car">🏎️ Lái siêu xe</button>
+    <button id="btn-cruise">🏁 Chạy quanh đường</button>
     <button id="btn-bell">🔔 Chuông/Còi</button>
   </div>
   <div class="row" id="clips"></div>
@@ -561,6 +569,7 @@ button.on {
           <tr><th>Thao tác</th><th>Máy tính (PC/Laptop)</th><th>Điện thoại (Mobile)</th></tr>
           <tr><td>Di chuyển</td><td>Phím <b>W A S D</b> hoặc <b>Phím Mũi tên</b></td><td>Kéo cần gạt <b>Joystick</b> ảo</td></tr>
           <tr><td>Đổi phương tiện</td><td>Phím <b>V</b> hoặc <b>F</b> (Đi bộ / Xe đạp / Ván / Xe)</td><td>Bấm nút <b>🚲</b> hoặc thanh dưới</td></tr>
+          <tr><td>Chạy quanh đường</td><td>Phím <b>R</b> hoặc nút <b>🏁 Chạy quanh đường</b></td><td>Nút <b>🏁 Chạy quanh đường</b></td></tr>
           <tr><td>Chuông xe / Còi</td><td>Phím <b>B</b> (Leng keng 🔔 / Bíp bíp 📢)</td><td>Bấm nút <b>🔔</b></td></tr>
           <tr><td>Chạy nước rút</td><td>Giữ phím <b>Shift</b> khi di chuyển</td><td>Kéo cần gạt Joystick > 75%</td></tr>
           <tr><td>Nhảy cao / Bật xe</td><td>Phím <b>Space (Phím cách)</b></td><td>Nút nhảy <b>⤒</b></td></tr>
@@ -1656,6 +1665,31 @@ const BOXES = [
 ];
 
 const RIDE_TYPES = ['walk', 'bike', 'board', 'car'];
+let cruiseMode = false, cruiseAngle = 0;
+
+function toggleCruise(force) {
+  cruiseMode = (force !== undefined ? force : !cruiseMode);
+  const btn = $('#btn-cruise');
+  if (btn) {
+    btn.classList.toggle('on', cruiseMode);
+    btn.textContent = cruiseMode ? '⏹ Dừng đường đua' : '🏁 Chạy quanh đường';
+  }
+  const leader = catsState[PL.act];
+  if (cruiseMode) {
+    setPlayMode(true);
+    // Calculate closest angle on elliptical road loop
+    const relX = leader.x / RX;
+    const relZ = (leader.z - RC) / (RZ * 0.35);
+    cruiseAngle = Math.atan2(relZ, relX);
+    showBubble(leader, '🏁 Chạy quanh đường!');
+    if (leader.ride === 'bike') ringBell();
+    else if (leader.ride === 'car') honkHorn();
+  } else {
+    showBubble(leader, '🛑 Lái tự do!');
+  }
+}
+const btnCruise = $('#btn-cruise');
+if (btnCruise) btnCruise.onclick = () => toggleCruise();
 
 function setVehicleMode(mode) {
   catsState.forEach(cs => {
@@ -1713,13 +1747,85 @@ function controlPlayerCat(c, tg, dt) {
   if (K.q) goalCam.az += dt * 2.4;
   if (K.e) goalCam.az -= dt * 2.4;
 
+  let baseSpeed = 4.5, sprintSpeed = 8.5;
+  if (c.ride === 'bike') { baseSpeed = 7.5; sprintSpeed = 12.0; }
+  else if (c.ride === 'board') { baseSpeed = 8.5; sprintSpeed = 13.5; }
+  else if (c.ride === 'car') { baseSpeed = 10.5; sprintSpeed = 16.5; }
+
+  // Auto-Cruise along Road Loop Mode
+  if (cruiseMode) {
+    const run = K.shift || PL.jr;
+    const curSpeed = run ? sprintSpeed : baseSpeed;
+    const dAngle = (curSpeed / (RX + RZ)) * dt * 0.95;
+    cruiseAngle += dAngle;
+
+    const p = rp(cruiseAngle, -0.35);
+    c.x = p[0];
+    c.z = p[1];
+    const nextP = rp(cruiseAngle + 0.04, -0.35);
+    tg.yaw = -Math.atan2(nextP[1] - p[1], nextP[0] - p[0]);
+    c.ph += dt * (run ? 18 : 12);
+
+    // Smooth Third-Person Chase Camera
+    if (!dragPoint) {
+      goalCam.az = tg.yaw + Math.PI;
+      goalCam.pl = 0.28;
+      goalCam.dist = (c.ride === 'walk' ? 13 : 16);
+    }
+
+    // Vehicle specific cruise poses & animations
+    if (c.ride === 'bike') {
+      c.cat.bike.crank.rotation.x += curSpeed * dt * 3.8;
+      c.cat.bike.fWheel.rotation.x += curSpeed * dt * 4.2;
+      c.cat.bike.rWheel.rotation.x += curSpeed * dt * 4.2;
+      const pa = c.cat.bike.crank.rotation.x;
+      Object.assign(tg, {
+        lx: Math.sin(pa) * 0.7 - 0.25,
+        rx: -Math.sin(pa) * 0.7 - 0.25,
+        la: -1.0, ra: -1.0,
+        laz: 0.32, raz: -0.32,
+        tl: 0.4, hx: -0.15
+      });
+      tg.py = (c.jy || 0) + 0.2;
+      c.cat.g.rotation.z = -Math.sin(cruiseAngle) * 0.22; // banking into curve
+    } else if (c.ride === 'board') {
+      Object.assign(tg, { lx: -0.35, rx: 0.35, la: -0.4, ra: 0.4, laz: 0.55, raz: -0.55, tl: 0.6, hx: 0 });
+      tg.py = (c.jy || 0) + 0.32 + Math.sin(elapsed * 5) * 0.05;
+      c.cat.g.rotation.z = -Math.sin(cruiseAngle) * 0.28;
+    } else if (c.ride === 'car') {
+      c.cat.car.wheels.forEach(w => w.rotation.x += curSpeed * dt * 4.0);
+      Object.assign(tg, { lx: -0.9, rx: -0.9, la: -1.1, ra: -1.1, laz: 0.2, raz: -0.2, tl: 0.3, hx: 0 });
+      tg.py = (c.jy || 0) + 0.18;
+      c.cat.g.rotation.z = -Math.sin(cruiseAngle) * 0.08;
+    } else {
+      const w = Math.sin(c.ph) * (run ? 1.1 : 0.75) * 0.95;
+      Object.assign(tg, { lx: w, rx: -w, la: -w * 0.8, ra: w * 0.8, tl: run ? 0.6 : 0.3 });
+      tg.py = (c.jy || 0) + Math.abs(Math.sin(c.ph)) * 0.08;
+      c.cat.g.rotation.z = 0;
+    }
+
+    // Bunny-hop jump while cruising
+    if (PL.jq && (c.jy || 0) <= 0.001 && !c.air) {
+      c.vy = 9.5;
+      c.air = true;
+      if (c.ride === 'bike') ringBell();
+      else if (c.ride === 'car') honkHorn();
+      else meow(c.i ? 1.3 : 0.9);
+    }
+    PL.jq = false;
+    c.vy = (c.vy || 0) - 24 * dt;
+    c.jy = (c.jy || 0) + c.vy * dt;
+    if (c.jy <= 0) { c.jy = 0; c.vy = 0; c.air = false; }
+    return;
+  }
+
   let ix = (K.d || K.arrowright ? 1 : 0) - (K.a || K.arrowleft ? 1 : 0) + PL.jv.x;
   let iz = (K.w || K.arrowup ? 1 : 0) - (K.s || K.arrowdown ? 1 : 0) + PL.jv.y;
   const l = Math.hypot(ix, iz);
   let isMoving = l > 0.08;
 
   // Speed according to vehicle mode
-  let baseSpeed = 4.5, sprintSpeed = 8.5;
+  baseSpeed = 4.5; sprintSpeed = 8.5;
   if (c.ride === 'bike') { baseSpeed = 7.5; sprintSpeed = 12.0; }
   else if (c.ride === 'board') { baseSpeed = 8.5; sprintSpeed = 13.5; }
   else if (c.ride === 'car') { baseSpeed = 10.5; sprintSpeed = 16.5; }
@@ -1897,6 +2003,7 @@ addEventListener('keydown', e => {
   if (!PL.on) return;
   if (k === ' ') { PL.jq = true; e.preventDefault(); }
   if (k === 'tab') { e.preventDefault(); $('#sw').click(); }
+  if (k === 'r') toggleCruise();
   if (k === 'v' || k === 'f') {
     const curIdx = RIDE_TYPES.indexOf(catsState[PL.act].ride);
     const nextMode = RIDE_TYPES[(curIdx + 1) % RIDE_TYPES.length];
@@ -2110,17 +2217,28 @@ function renderLoop(now) {
     if (isPlayerControlled) {
       controlPlayerCat(c, targetState, dt);
     } else if (distToGoal > 0.15) {
-      const isFar = distToGoal > 4.5;
-      let spd = (isFar ? 8.5 : 4.5);
-      if (c.ride === 'bike') spd = (isFar ? 12.0 : 7.5);
-      else if (c.ride === 'board') spd = (isFar ? 13.5 : 8.5);
-      else if (c.ride === 'car') spd = (isFar ? 16.5 : 10.5);
+      if (cruiseMode) {
+        // Companion cat cruises on outer lane slightly behind leader
+        const compAngle = cruiseAngle - 0.28;
+        const pComp = rp(compAngle, 0.42);
+        c.x = pComp[0];
+        c.z = pComp[1];
+        const nextComp = rp(compAngle + 0.04, 0.42);
+        targetState.yaw = -Math.atan2(nextComp[1] - pComp[1], nextComp[0] - pComp[0]);
+        c.ph += dt * 16;
+      } else {
+        const isFar = distToGoal > 4.5;
+        let spd = (isFar ? 8.5 : 4.5);
+        if (c.ride === 'bike') spd = (isFar ? 12.0 : 7.5);
+        else if (c.ride === 'board') spd = (isFar ? 13.5 : 8.5);
+        else if (c.ride === 'car') spd = (isFar ? 16.5 : 10.5);
 
-      const step = Math.min(distToGoal, spd * dt);
-      c.x += (dx / distToGoal) * step;
-      c.z += (dz / distToGoal) * step;
-      c.ph += dt * (isFar ? 18 : 12);
-      targetState.yaw = Math.atan2(dx, dz);
+        const step = Math.min(distToGoal, spd * dt);
+        c.x += (dx / distToGoal) * step;
+        c.z += (dz / distToGoal) * step;
+        c.ph += dt * (isFar ? 18 : 12);
+        targetState.yaw = Math.atan2(dx, dz);
+      }
 
       // Follower vehicle animation
       if (c.ride === 'bike') {
