@@ -6,11 +6,16 @@
 <title>TT Trung Tín – Làng 3D & Mèo Chibi Animation 🐾</title>
 <style>
 :root {
-  --bg: #0c0926;
+  --bg: #090516;
   --fg: #ffffff;
-  --pk: #ff8fc8;
-  --bl: #4aa8ff;
-  --pr: #7a5cff;
+  --pk: #ff7ebb;
+  --bl: #38bdf8;
+  --pr: #8b5cf6;
+  --deep-pr: #1e133d;
+  --accent-gold: #fbbf24;
+  --glass-bg: rgba(14, 10, 34, 0.76);
+  --glass-border: rgba(139, 92, 246, 0.32);
+  --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -20,7 +25,7 @@ html, body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -40,184 +45,254 @@ canvas {
   opacity: 0;
   pointer-events: none;
   z-index: 99999;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* HUD Top Header */
+/* HUD Top Header - Premium Indie Brand */
 .hud-top {
   position: fixed;
-  left: 14px;
-  top: calc(12px + env(safe-area-inset-top, 0px));
+  left: 18px;
+  top: calc(14px + env(safe-area-inset-top, 0px));
   pointer-events: none;
-  text-shadow: 0 0 16px rgba(74, 168, 255, 0.8), 0 2px 4px rgba(0,0,0,0.8);
   z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 .hud-top b {
-  font-size: 22px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(90deg, #8fc5ff, #ff9ad0);
+  background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #f472b6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(168, 85, 247, 0.5));
 }
 .hud-top span {
   display: block;
-  font-size: 13px;
-  opacity: 0.88;
-  color: #c8b8ff;
-  font-style: italic;
-  margin-top: 2px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #c4b5fd;
+  opacity: 0.92;
+  letter-spacing: 0.2px;
 }
 
-/* Top Right Buttons */
+/* Top Right Actions */
 .top-actions {
   position: fixed;
-  right: 14px;
-  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: 18px;
+  top: calc(14px + env(safe-area-inset-top, 0px));
   display: flex;
   gap: 8px;
   z-index: 50;
 }
 .top-btn {
-  background: rgba(22, 14, 56, 0.82);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--pr);
-  color: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  color: #f1f5f9;
   border-radius: 999px;
-  padding: 8px 15px;
+  padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 0 14px rgba(122, 92, 255, 0.3);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .top-btn:hover {
-  transform: translateY(-1px) scale(1.03);
-  border-color: var(--pk);
-  box-shadow: 0 0 18px rgba(255, 143, 200, 0.5);
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(192, 132, 252, 0.6);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+}
+.top-btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
-/* Floating Help pill */
+/* Floating Help Pill - Compact & Elegant */
 #hp {
   position: fixed;
-  left: 14px;
-  top: calc(66px + env(safe-area-inset-top, 0px));
+  left: 18px;
+  top: calc(70px + env(safe-area-inset-top, 0px));
   font-size: 12px;
-  background: rgba(14, 10, 36, 0.78);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(122, 92, 255, 0.4);
-  padding: 6px 14px;
-  border-radius: 10px;
-  color: #d6ccff;
+  background: rgba(14, 10, 34, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  padding: 7px 14px;
+  border-radius: 12px;
+  color: #ddd6fe;
   pointer-events: none;
-  max-width: 360px;
+  max-width: 420px;
   line-height: 1.5;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transition: opacity 0.3s ease;
   z-index: 40;
 }
+#hp b {
+  color: #fbcfe8;
+  font-weight: 600;
+}
 
-/* Bottom Stack Controls */
+/* Bottom Stack Controls - Unified Glassmorphism Dock */
 .stack {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 6px;
   align-items: center;
-  padding: 0 8px;
+  padding: 0 12px;
   pointer-events: none;
   z-index: 50;
 }
 .stack > * { pointer-events: auto; }
+
+.dock-card {
+  background: rgba(13, 9, 30, 0.74);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 6px 10px;
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  max-width: 95vw;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   justify-content: center;
   align-items: center;
 }
+
+/* Standard Button styling */
 button {
-  background: rgba(24, 16, 64, 0.85);
+  background: rgba(28, 19, 58, 0.65);
   backdrop-filter: blur(8px);
-  color: #fff;
-  border: 1px solid #6f5bd6;
+  -webkit-backdrop-filter: blur(8px);
+  color: #e2e8f0;
+  border: 1px solid rgba(139, 92, 246, 0.25);
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 7px 13px;
   font: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 button:hover {
-  border-color: var(--pk);
-  box-shadow: 0 0 10px rgba(255, 143, 200, 0.4);
+  background: rgba(48, 32, 98, 0.85);
+  border-color: rgba(192, 132, 252, 0.55);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
+}
+button:active {
+  transform: translateY(0) scale(0.98);
 }
 button.on {
-  border-color: var(--pk);
-  background: rgba(58, 30, 96, 0.9);
-  box-shadow: 0 0 14px var(--pk);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.85), rgba(168, 85, 247, 0.85));
+  border-color: #f472b6;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.3);
 }
+
+/* Nút "Phim ngắn" Hiện đại, Tinh tế, Chuẩn 3D Cinematic */
 #play {
-  background: linear-gradient(90deg, #ff5fa8, #7a5cff);
-  border: 0;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #6366f1 100%);
+  border: 1px solid rgba(255, 182, 217, 0.55);
+  color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 0 14px rgba(255, 95, 168, 0.5);
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(236, 72, 153, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
-#pm {
-  background: linear-gradient(90deg, #3a7bff, #7a5cff);
-  border: 0;
-  font-weight: 700;
+#play:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 24px rgba(236, 72, 153, 0.65), 0 0 12px rgba(139, 92, 246, 0.5);
 }
-.play #pm {
-  background: linear-gradient(90deg, #ff5fa8, #ff8fc8);
-  box-shadow: 0 0 16px var(--pk);
+#play:active {
+  transform: translateY(0) scale(0.98);
 }
 
-/* Vehicle Mode Pills */
-#rides button {
-  font-weight: 600;
-  border-color: #5aa8ff;
-}
-#btn-cruise.on {
-  background: linear-gradient(90deg, #ffd23a, #ff5fa8);
-  border-color: #ffffff;
-  color: #111;
-  font-weight: 800;
-  box-shadow: 0 0 18px rgba(255, 210, 58, 0.8);
-}
-#rides button.on {
-  border-color: #ffd23a;
-  box-shadow: 0 0 14px rgba(255, 210, 58, 0.6);
-  background: rgba(60, 48, 12, 0.9);
-  color: #fff;
-}
-
-/* Timeline progress for Movie */
+/* Timeline progress for Movie Tour */
 #tl {
   display: flex;
-  gap: 3px;
-  width: min(500px, 65vw);
-  height: 8px;
+  gap: 4px;
+  width: min(440px, 50vw);
+  height: 7px;
+  padding: 2px;
+  background: rgba(18, 12, 42, 0.7);
+  border-radius: 999px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 #tl i {
   display: block;
-  background: rgba(58, 42, 106, 0.7);
-  border-radius: 4px;
+  background: rgba(58, 42, 106, 0.55);
+  border-radius: 999px;
   overflow: hidden;
+  height: 100%;
 }
 #tl b {
   display: block;
   height: 100%;
   width: 0;
-  background: var(--pk);
-  box-shadow: 0 0 8px var(--pk);
+  background: linear-gradient(90deg, #ec4899, #a855f7);
+  box-shadow: 0 0 8px #f472b6;
+  border-radius: 999px;
+}
+
+/* Rideable Vehicles Row */
+#rides button {
+  font-weight: 600;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+#rides button.on {
+  border-color: #fbbf24;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.5);
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.85), rgba(180, 83, 9, 0.85));
+  color: #fff;
+}
+#btn-cruise.on {
+  background: linear-gradient(135deg, #f59e0b, #ec4899);
+  border-color: #ffffff;
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.75);
+}
+
+#pm {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: 1px solid rgba(147, 197, 253, 0.35);
+  font-weight: 700;
+}
+.play #pm {
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.6);
 }
 
 #joy, #jb, #mb, #vb, #bb, #sw { display: none; }
@@ -229,12 +304,16 @@ button.on {
   position: fixed;
   left: 0;
   right: 0;
-  top: 18%;
+  top: 15%;
   text-align: center;
-  font-size: clamp(22px, 5vw, 36px);
+  font-size: clamp(22px, 4.5vw, 34px);
   font-weight: 800;
+  letter-spacing: 0.5px;
   pointer-events: none;
-  text-shadow: 0 0 20px #ff8fc8, 0 3px 6px rgba(0,0,0,0.9);
+  background: linear-gradient(135deg, #ffffff 0%, #ffc0e5 50%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 14px rgba(236, 72, 153, 0.85)) drop-shadow(0 1px 3px rgba(0,0,0,0.9));
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 45;
@@ -250,9 +329,9 @@ button.on {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    border: 2px solid rgba(122, 92, 255, 0.8);
-    background: rgba(22, 14, 56, 0.5);
-    backdrop-filter: blur(4px);
+    border: 2px solid rgba(139, 92, 246, 0.75);
+    background: rgba(18, 12, 42, 0.6);
+    backdrop-filter: blur(8px);
     touch-action: none;
     z-index: 60;
   }
@@ -264,7 +343,7 @@ button.on {
     height: 30px;
     border-radius: 50%;
     background: var(--pk);
-    box-shadow: 0 0 12px var(--pk);
+    box-shadow: 0 0 14px var(--pk);
     pointer-events: none;
   }
   .play #jb {
@@ -277,9 +356,9 @@ button.on {
     border-radius: 50%;
     padding: 0;
     font-size: 26px;
-    background: linear-gradient(135deg, #ff5fa8, #7a5cff);
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
     border: none;
-    box-shadow: 0 0 16px rgba(255, 95, 168, 0.6);
+    box-shadow: 0 0 16px rgba(236, 72, 153, 0.6);
     z-index: 60;
   }
   .play #mb {
@@ -292,7 +371,7 @@ button.on {
     border-radius: 50%;
     padding: 0;
     font-size: 19px;
-    background: rgba(24, 16, 64, 0.85);
+    background: rgba(28, 19, 58, 0.85);
     border: 1px solid var(--pk);
     z-index: 60;
   }
@@ -306,7 +385,7 @@ button.on {
     border-radius: 50%;
     padding: 0;
     font-size: 19px;
-    background: rgba(24, 16, 64, 0.85);
+    background: rgba(28, 19, 58, 0.85);
     border: 1px solid #ffd23a;
     z-index: 60;
   }
@@ -320,8 +399,8 @@ button.on {
     border-radius: 50%;
     padding: 0;
     font-size: 22px;
-    background: rgba(24, 16, 64, 0.85);
-    border: 1px solid #4aa8ff;
+    background: rgba(28, 19, 58, 0.85);
+    border: 1px solid #38bdf8;
     z-index: 60;
   }
   #hp { display: none; }
@@ -331,8 +410,9 @@ button.on {
 .modal-wrap {
   position: fixed;
   inset: 0;
-  background: rgba(8, 6, 22, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(6, 4, 18, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -340,22 +420,22 @@ button.on {
   padding: 16px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .modal-wrap.show {
   opacity: 1;
   pointer-events: auto;
 }
 .modal-card {
-  background: linear-gradient(145deg, rgba(28, 18, 68, 0.98), rgba(12, 8, 32, 0.98));
-  border: 1px solid #7a5cff;
-  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(26, 16, 56, 0.98), rgba(12, 8, 30, 0.98));
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 22px;
   max-width: 680px;
   width: 100%;
   max-height: 88vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 40px rgba(122, 92, 255, 0.4), 0 20px 40px rgba(0,0,0,0.8);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 35px rgba(139, 92, 246, 0.35);
   position: relative;
   overflow: hidden;
 }
@@ -374,36 +454,36 @@ button.on {
   transition: background 0.2s;
 }
 .modal-close:hover {
-  background: rgba(255, 143, 200, 0.2);
+  background: rgba(236, 72, 153, 0.2);
 }
 .modal-header {
   padding: 22px 24px 14px;
-  border-bottom: 1px solid rgba(122, 92, 255, 0.25);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.22);
   padding-right: 50px;
 }
 .modal-header h2 {
   margin: 0;
   font-size: 21px;
   color: #fff;
-  text-shadow: 0 0 12px var(--pk);
+  text-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
 }
 .modal-header .tagline {
   margin: 4px 0 0;
   font-size: 13px;
-  color: #aab8ff;
+  color: #c4b5fd;
 }
 .modal-body {
   padding: 18px 24px;
   overflow-y: auto;
   font-size: 13.5px;
   line-height: 1.6;
-  color: #d8d6f0;
+  color: #ddd6fe;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 .modal-body::-webkit-scrollbar { width: 6px; }
-.modal-body::-webkit-scrollbar-thumb { background: #6f5bd6; border-radius: 3px; }
+.modal-body::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
 .intro-sec h3 {
   margin: 0 0 8px;
   font-size: 14.5px;
@@ -419,8 +499,8 @@ button.on {
   gap: 10px;
 }
 .feat-box {
-  background: rgba(42, 28, 88, 0.45);
-  border: 1px solid rgba(111, 91, 214, 0.35);
+  background: rgba(38, 24, 78, 0.45);
+  border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 12px;
   padding: 12px;
   transition: border-color 0.2s;
@@ -437,32 +517,32 @@ button.on {
 }
 .ctrl-table th, .ctrl-table td {
   padding: 8px 10px;
-  border: 1px solid rgba(111, 91, 214, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.25);
   text-align: left;
 }
-.ctrl-table th { background: rgba(58, 42, 106, 0.5); color: var(--pk); }
-.ctrl-table td b { color: #8fc0ff; }
+.ctrl-table th { background: rgba(58, 38, 110, 0.5); color: var(--pk); }
+.ctrl-table td b { color: #93c5fd; }
 .modal-footer {
   padding: 14px 24px;
-  border-top: 1px solid rgba(122, 92, 255, 0.25);
+  border-top: 1px solid rgba(139, 92, 246, 0.22);
   display: flex;
   justify-content: flex-end;
 }
 .btn-primary {
-  background: linear-gradient(90deg, #ff5fa8, #7a5cff);
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
   border: none;
   font-weight: 700;
   padding: 10px 24px;
   font-size: 14px;
-  box-shadow: 0 0 16px rgba(255, 95, 168, 0.4);
-  transition: all 0.2s;
+  box-shadow: 0 0 18px rgba(236, 72, 153, 0.45);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   color: #fff;
   border-radius: 999px;
   cursor: pointer;
 }
 .btn-primary:hover {
-  box-shadow: 0 0 24px rgba(255, 95, 168, 0.8);
-  transform: scale(1.02);
+  box-shadow: 0 0 26px rgba(236, 72, 153, 0.75);
+  transform: translateY(-1px) scale(1.02);
 }
 </style>
 </head>
@@ -474,12 +554,12 @@ button.on {
 
 <div class="hud-top">
   <b>TT · Trung Tín 🐾</b>
-  <span>Dream Big, Code Better</span>
+  <span>✨ Dream Big, Code Better · Cozy 3D World</span>
 </div>
 
 <div class="top-actions">
   <button id="btn-photo" class="top-btn" title="Chụp ảnh màn hình lưu về máy">📸 Chụp ảnh</button>
-  <button id="btn-dn" class="top-btn" title="Chuyển Ngày / Đêm">🌙 Đêm</button>
+  <button id="btn-dn" class="top-btn" title="Chuyển Ngày / Đêm">🌙 Đêm Neon</button>
   <button id="info-btn" class="top-btn" title="Giới thiệu trang web">ℹ️ Giới thiệu</button>
 </div>
 
@@ -496,35 +576,37 @@ button.on {
 
 <!-- UI Stack at Bottom -->
 <div class="stack">
-  <div class="row" id="movie">
-    <button id="play">🎬 Phim ngắn</button>
-    <div id="tl"></div>
-  </div>
-  <div class="row" id="who">
-    <button data-w="0" class="on">Cả hai</button>
-    <button data-w="1">🐈‍⬛ Mèo Đen</button>
-    <button data-w="2">🐱 Mèo Trắng</button>
-  </div>
-  <div class="row" id="rides">
-    <button data-r="walk" class="on">🚶 Đi bộ</button>
-    <button data-r="bike">🚲 Đạp xe</button>
-    <button data-r="board">🛹 Ván trượt</button>
-    <button data-r="car">🏎️ Lái siêu xe</button>
-    <button id="btn-cruise">🏁 Chạy quanh đường</button>
-    <button id="btn-bell">🔔 Chuông/Còi</button>
-  </div>
-  <div class="row" id="clips"></div>
-  <div class="row">
-    <button id="pm" class="on">🛑 Dừng lái</button>
-    <button id="sw">🔁 Đổi mèo (Tab)</button>
-    <button id="rot" class="on">🔄 Tự xoay</button>
-    <button id="v1">🏠 Biệt thự</button>
-    <button id="v2">🐾 Cận mèo</button>
-    <button id="v3">🚗 Đường phố</button>
-    <button id="v4">🌀 Cổng sao</button>
-    <button id="v5">☕ Tiệm Cafe</button>
-    <button id="v6">🏪 Quầy Chợ</button>
-    <button id="mus">🎵 Nhạc: Tắt</button>
+  <div class="dock-card">
+    <div class="row" id="movie">
+      <button id="play">🎬 Phim ngắn</button>
+      <div id="tl"></div>
+      <div class="row" id="who" style="margin-left: 6px;">
+        <button data-w="0" class="on">🐾 Cả hai</button>
+        <button data-w="1">🐈‍⬛ Mèo Đen</button>
+        <button data-w="2">🐱 Mèo Trắng</button>
+      </div>
+    </div>
+    <div class="row" id="rides">
+      <button data-r="walk" class="on">🚶 Đi bộ</button>
+      <button data-r="bike">🚲 Đạp xe</button>
+      <button data-r="board">🛹 Ván trượt</button>
+      <button data-r="car">🏎️ Lái siêu xe</button>
+      <button id="btn-cruise">🏁 Chạy quanh đường</button>
+      <button id="btn-bell">🔔 Chuông/Còi</button>
+    </div>
+    <div class="row" id="clips"></div>
+    <div class="row">
+      <button id="pm" class="on">🛑 Dừng lái</button>
+      <button id="sw">🔁 Đổi mèo (Tab)</button>
+      <button id="rot" class="on">🔄 Tự xoay</button>
+      <button id="v1">🏠 Toàn cảnh</button>
+      <button id="v2">🐾 Cận mèo</button>
+      <button id="v3">🚗 Đường phố</button>
+      <button id="v4">🌀 Cổng sao</button>
+      <button id="v5">☕ Cafe Mèo</button>
+      <button id="v6">🏪 Chợ Quê</button>
+      <button id="mus">🎵 Nhạc: Tắt</button>
+    </div>
   </div>
 </div>
 
@@ -622,33 +704,73 @@ R.shadowMap.enabled = true;
 R.shadowMap.type = T.PCFShadowMap;
 
 const S = new T.Scene();
-const skyNight = 0x0c0926, skyDay = 0x82b4ff, skySunset = 0xff8c69;
-S.background = new T.Color(skyDay);
-S.fog = new T.FogExp2(skyDay, 0.010);
+const skyNight = 0x0d0824, skyDay = 0x82b4ff, skySunset = 0xff8c69;
 
-const cam = new T.PerspectiveCamera(45, 1, 0.5, 300);
+// Celestial Gradient Sky Generator (Creates deep dreamy purple-blue cosmic atmosphere)
+function makeSkyGrad(top, mid, btm) {
+  const cv = document.createElement('canvas');
+  cv.width = 16; cv.height = 256;
+  const ctx = cv.getContext('2d');
+  const gr = ctx.createLinearGradient(0, 0, 0, 256);
+  gr.addColorStop(0.0, top);
+  gr.addColorStop(0.55, mid);
+  gr.addColorStop(1.0, btm);
+  ctx.fillStyle = gr;
+  ctx.fillRect(0, 0, 16, 256);
+  const tex = new T.CanvasTexture(cv);
+  tex.wrapS = tex.wrapT = T.ClampToEdgeWrapping;
+  return tex;
+}
+const skyTexNight = makeSkyGrad('#080415', '#1a0e38', '#142042');
+const skyTexSunset = makeSkyGrad('#27173e', '#782d5a', '#f97316');
+const skyTexDay = makeSkyGrad('#4a8fe7', '#7ab0f6', '#dbeafe');
+
+// Atmospheric Inverted Sky Dome with Parallax Depth
+const skyGeo = new T.SphereGeometry(220, 24, 16);
+const skyMat = new T.MeshBasicMaterial({ map: skyTexNight, side: T.BackSide, depthWrite: false });
+const skyDome = new T.Mesh(skyGeo, skyMat);
+S.add(skyDome);
+
+S.background = new T.Color(skyNight);
+S.fog = new T.FogExp2(0x130d2d, 0.011);
+
+// Camera Setup with Responsive Dynamic FOV (No clipping on any desktop or mobile size!)
+const cam = new T.PerspectiveCamera(42, 1, 0.5, 380);
 function rs() {
   R.setSize(innerWidth, innerHeight);
   cam.aspect = innerWidth / innerHeight;
+  if (cam.aspect < 1.0) {
+    cam.fov = 55;
+  } else if (cam.aspect < 1.35) {
+    cam.fov = 47;
+  } else {
+    cam.fov = 42;
+  }
   cam.updateProjectionMatrix();
 }
 addEventListener('resize', rs);
 rs();
 
-// Ambient & Directional Lights
-const hemi = new T.HemisphereLight(0xffffff, 0x88bb77, 1.1);
+// Dreamy Purple & Blue Ambient + Moon Lighting
+const hemi = new T.HemisphereLight(0x8b7cff, 0x241444, 1.15);
 S.add(hemi);
 
-const sun = new T.DirectionalLight(0xfff6dd, 1.3);
-sun.position.set(-20, 36, 22);
+// Soft Lavender Moonlight casting gentle shadows
+const sun = new T.DirectionalLight(0xa5b4fc, 1.05);
+sun.position.set(-22, 38, 24);
 sun.castShadow = true;
 const sc = sun.shadow.camera;
-sc.left = sc.bottom = -38;
-sc.right = sc.top = 38;
-sc.far = 100;
+sc.left = sc.bottom = -40;
+sc.right = sc.top = 40;
+sc.far = 110;
 sun.shadow.mapSize.set(1024, 1024);
 sun.shadow.bias = -0.0003;
 S.add(sun);
+
+// Subtle Cyan/Teal Rim Fill Light for signature indie-game dual-tone depth
+const rimLight = new T.DirectionalLight(0x2dd4bf, 0.42);
+rimLight.position.set(26, 16, -22);
+S.add(rimLight);
 
 // Material Cache & Geometry Cache for maximum 60FPS WebGL performance
 const _matCache = {}, _glwCache = {}, _geoCache = {};
@@ -823,11 +945,32 @@ for (let i = 0; i < 8; i++) {
 }
 glow(S, 0, -10, 0, 0x4aa8ff, 45);
 
-// Village Plaza & Cobblestone tiles
-bx(S, 20, 0.12, 8, 0x8888a2, -1, 0.06, -3);
-bx(S, 6, 0.12, 4, 0x8888a2, 0, 0.06, 2.5);
-for (let i = 0; i < 35; i++) {
-  bx(S, 0.9 + R2() * 0.8, 0.02, 0.8 + R2() * 0.5, 0x9696b0, -11 + R2() * 19, 0.13, -7 + R2() * 8);
+// Village Plaza & Interconnected Cobblestone Pathways
+bx(S, 20, 0.12, 8, 0x7c7c98, -1, 0.06, -3);
+bx(S, 6, 0.12, 4, 0x7c7c98, 0, 0.06, 2.5);
+for (let i = 0; i < 40; i++) {
+  bx(S, 0.9 + R2() * 0.8, 0.02, 0.8 + R2() * 0.5, 0x8e8eb0, -11 + R2() * 19, 0.13, -7 + R2() * 8);
+}
+
+// Natural Cobblestone Path to Meow Cafe (Left side)
+for (let i = 0; i < 8; i++) {
+  const px = -11 - i * 0.95;
+  const pz = -3 - Math.sin(i * 0.4) * 0.8;
+  bx(S, 1.25, 0.04, 1.35, (i % 2 ? 0x7c7c98 : 0x8e8eb0), px, 0.08, pz);
+}
+
+// Natural Cobblestone Path to Stargate Portal (Right side)
+for (let i = 0; i < 8; i++) {
+  const px = 8.5 + i * 0.9;
+  const pz = -2 + i * 0.7;
+  bx(S, 1.2, 0.04, 1.3, (i % 2 ? 0x7c7c98 : 0x8e8eb0), px, 0.08, pz);
+}
+
+// Garden Stepping Stones to Compact Koi Pond
+for (let i = 0; i < 6; i++) {
+  const px = -10 - i * 1.5;
+  const pz = 1.8 + i * 0.75;
+  cy(S, 0.55 + R2() * 0.2, 0.04, 0x82829a, px, 0.09, pz, undefined, 8);
 }
 
 // Elliptical Road Loop for Vehicles
@@ -1381,17 +1524,30 @@ for (let r = 0; r < 8; r++) {
   bx(portalGrp, 0.28, 0.28, 0.55, 0x3b82f6, Math.sin(ra) * 2.4, 2.7 + Math.cos(ra) * 2.4, 0);
 }
 
-// Glowing Energy Vortex
+// Glowing Energy Vortex (Soft & Ethereal - No harsh white burnout!)
 const vortexMat = new T.MeshBasicMaterial({
   color: 0x38bdf8,
   transparent: true,
-  opacity: 0.88,
+  opacity: 0.62,
   side: T.DoubleSide,
   blending: T.AdditiveBlending,
   depthWrite: false
 });
 const portalVortex = add(portalGrp, new T.CircleGeometry(2.1, 32), vortexMat, 0, 2.7, 0);
-glow(portalGrp, 0, 2.7, 0, 0x38bdf8, 12);
+
+// Inner Cosmic Violet Energy Swirl for rich layered depth
+const innerVortexMat = new T.MeshBasicMaterial({
+  color: 0xa855f7,
+  transparent: true,
+  opacity: 0.45,
+  side: T.DoubleSide,
+  blending: T.AdditiveBlending,
+  depthWrite: false
+});
+const portalInnerVortex = add(portalGrp, new T.RingGeometry(0.35, 1.6, 24), innerVortexMat, 0, 2.7, 0.02);
+
+// Soft ethereal glow sprite (reduced from 12 to 4.8 to eliminate overexposure)
+glow(portalGrp, 0, 2.7, 0, 0x38bdf8, 4.8);
 
 // Two Giant Floating Magic Amethyst & Cyan Crystals
 const floatCrystals = [];
@@ -1406,8 +1562,9 @@ const floatCrystals = [];
 });
 
 anim.push((t, dt) => {
-  portalVortex.rotation.z = t * 2.5;
-  vortexMat.opacity = 0.75 + Math.sin(t * 4) * 0.18;
+  portalVortex.rotation.z = t * 1.8;
+  portalInnerVortex.rotation.z = -t * 2.2;
+  vortexMat.opacity = 0.55 + Math.sin(t * 3.0) * 0.12;
   floatCrystals.forEach((c, idx) => {
     c.position.y = 1.8 + Math.sin(t * 2.2 + idx * Math.PI) * 0.2;
     c.rotation.y += dt * 1.5;
@@ -1708,8 +1865,9 @@ tree(-26, 10, 'sakura');
 
 anim.push(t => {
   sway.forEach(s => {
-    s.o.rotation.z = Math.sin(t * 0.9 + s.ph) * 0.035;
-    s.o.rotation.x = Math.cos(t * 0.8 + s.ph) * 0.035;
+    // Multi-frequency organic breeze swaying
+    s.o.rotation.z = Math.sin(t * 1.1 + s.ph) * 0.035 + Math.sin(t * 2.2 + s.ph) * 0.012;
+    s.o.rotation.x = Math.cos(t * 0.9 + s.ph) * 0.030;
   });
 });
 
@@ -1740,11 +1898,20 @@ const fireflies = createParticles(80, (a, i) => {
   a[i + 2] = (R2() - 0.5) * 40;
 }, 0xffef8a, 0.4);
 
-// Ultra-fast GPU-friendly particle animation (No CPU buffer reallocation stalls!)
+// Ambient Floating Cosmic Stardust (Dreamy motes drifting across the diorama)
+const stardust = createParticles(95, (a, i) => {
+  a[i] = (R2() - 0.5) * 58;
+  a[i + 1] = 0.8 + R2() * 8.5;
+  a[i + 2] = (R2() - 0.5) * 46;
+}, 0xb8b8ff, 0.42);
+
+// Ultra-fast GPU-friendly particle animation
 anim.push((t, dt) => {
   petals.pts.rotation.y += dt * 0.04;
   fireflies.pts.rotation.y -= dt * 0.02;
   fireflies.pts.position.y = Math.sin(t * 1.2) * 0.3;
+  stardust.pts.rotation.y += dt * 0.016;
+  stardust.pts.position.y = Math.sin(t * 0.75) * 0.35;
 
   smokes.forEach(s => {
     const u = s.userData, k = (t * 0.25 + u.p) % 1;
@@ -2239,10 +2406,11 @@ $('#mus').onclick = () => {
 /* ====================================================================
    9. CAMERA, DAY/NIGHT & PHOTO SCREENSHOT
 ==================================================================== */
-const curCam = { az: 0.5, pl: 0.45, dist: 60 };
-const goalCam = { az: 0.5, pl: 0.45, dist: 60 };
-const targetLook = new T.Vector3(0, 3, 0);
-const goalLook = new T.Vector3(0, 3, 0);
+// Balanced Perspective Camera Framing (Centers entire diorama with generous border room)
+const curCam = { az: 0.46, pl: 0.42, dist: 68 };
+const goalCam = { az: 0.46, pl: 0.42, dist: 68 };
+const targetLook = new T.Vector3(0, 2.8, -0.5);
+const goalLook = new T.Vector3(0, 2.8, -0.5);
 let autoRotate = true, dragPoint = null;
 
 $('#rot').onclick = () => {
@@ -2251,12 +2419,12 @@ $('#rot').onclick = () => {
 };
 
 const CAM_VIEWS = {
-  v1: [-2, 3, -4, 58, 0.45, 0.3],
-  v2: [-4.0, 2.0, -4.0, 14, 0.25, 0.1],
-  v3: [0, 1, 9, 32, 0.4, 0],
-  v4: [16, 2, 4, 24, 0.32, -0.6],
-  v5: [-18.5, 2.2, -4.5, 16, 0.28, 0.4],
-  v6: [19.0, 2.0, -4.5, 16, 0.28, -0.4]
+  v1: [0, 2.8, -0.5, 68, 0.42, 0.46],     // Toàn cảnh làng diorama (Perfect Overview)
+  v2: [-4.0, 1.8, -4.0, 13.5, 0.22, 0.1], // Cận cảnh 2 mèo chibi
+  v3: [0, 1.2, 9, 32, 0.35, 0],           // Đường phố & Xe
+  v4: [16, 2.2, 4, 22, 0.28, -0.55],      // Cổng Stargate huyền ảo
+  v5: [-18.5, 2.2, -4.5, 17, 0.26, 0.38], // Tiệm Cafe & Bakery
+  v6: [19.0, 2.0, -4.5, 17, 0.26, -0.38]  // Quầy Chợ Quê
 };
 Object.keys(CAM_VIEWS).forEach(k => {
   $('#' + k).onclick = () => {
@@ -2269,30 +2437,35 @@ Object.keys(CAM_VIEWS).forEach(k => {
   };
 });
 
-let todIdx = 0; // 0: Day, 1: Sunset, 2: Night
+// Default to 2: 🌙 Đêm Neon (Cinematic Night Environment with Dreamy Purple & Blue)
+let todIdx = 2;
 const TOD_CONFIGS = [
-  { name: '☀️ Ban Ngày', sky: skyDay, hemi: 0xffffff, gnd: 0x88bb77, sun: 0xfff6dd, int: 1.35, fog: 0.010 },
-  { name: '🌅 Hoàng Hôn', sky: skySunset, hemi: 0xffb74d, gnd: 0x5c2b29, sun: 0xff7043, int: 1.55, fog: 0.012 },
-  { name: '🌙 Đêm Neon', sky: skyNight, hemi: 0x9d8dfc, gnd: 0x1f1640, sun: 0x818cf8, int: 0.88, fog: 0.014 }
+  { name: '☀️ Ban Ngày', skyTex: skyTexDay, skyCol: skyDay, fogCol: 0x82b4ff, hemi: 0xffffff, gnd: 0x88bb77, sun: 0xfff6dd, int: 1.35, rimCol: 0xffffff, rim: 0.25, fog: 0.009 },
+  { name: '🌅 Hoàng Hôn', skyTex: skyTexSunset, skyCol: skySunset, fogCol: 0x5c2b48, hemi: 0xffb74d, gnd: 0x4a1d2e, sun: 0xff7043, int: 1.45, rimCol: 0xffaa55, rim: 0.35, fog: 0.011 },
+  { name: '🌙 Đêm Neon', skyTex: skyTexNight, skyCol: skyNight, fogCol: 0x14102e, hemi: 0x8b7cff, gnd: 0x241444, sun: 0xa5b4fc, int: 1.05, rimCol: 0x2dd4bf, rim: 0.42, fog: 0.012 }
 ];
 
 $('#btn-dn').onclick = () => {
   todIdx = (todIdx + 1) % TOD_CONFIGS.length;
   const cfg = TOD_CONFIGS[todIdx];
   $('#btn-dn').textContent = cfg.name;
-  S.background.set(cfg.sky);
-  S.fog.color.set(cfg.sky);
+  skyMat.map = cfg.skyTex;
+  skyMat.needsUpdate = true;
+  S.background.set(cfg.skyCol);
+  S.fog.color.set(cfg.fogCol);
   S.fog.density = cfg.fog;
   hemi.color.set(cfg.hemi);
   hemi.groundColor.set(cfg.gnd);
   sun.color.set(cfg.sun);
   sun.intensity = cfg.int;
+  rimLight.color.set(cfg.rimCol);
+  rimLight.intensity = cfg.rim;
   updateLightingAndWindows(todIdx);
   const msg = (todIdx === 0 ? '☀️ Ban ngày: Đã tắt đèn nhà!' : todIdx === 1 ? '🌅 Hoàng hôn: Đèn bắt đầu bật ấm áp!' : '🌙 Ban đêm: Đã bật sáng đèn nhà & phố!');
   showBubble(catsState[PL.act], msg);
 };
-// Ban ngày mặc định: Tắt đèn nhà & đèn đường khi vừa tải trang
-updateLightingAndWindows(0);
+// Ban đêm mặc định: Bật sáng đèn nhà, đèn đường & đèn lồng lung linh khi tải trang
+updateLightingAndWindows(2);
 
 // Photo Capture Feature
 $('#btn-photo').onclick = () => {
@@ -2882,17 +3055,20 @@ function renderLoop(now) {
     goalLook.set(activeLeader.x, 2, activeLeader.z);
   }
 
-  // Smooth camera interpolation
-  if (autoRotate && !dragPoint && !PL.on && !moviePlaying) goalCam.az += dt * 0.08;
+  // Smooth camera interpolation with subtle cinematic float
+  if (autoRotate && !dragPoint && !PL.on && !mv.on) goalCam.az += dt * 0.075;
   const dampK = 1 - Math.exp(-9 * dt);
   curCam.az += (goalCam.az - curCam.az) * dampK;
   curCam.pl += (goalCam.pl - curCam.pl) * dampK;
   curCam.dist += (goalCam.dist - curCam.dist) * dampK;
   targetLook.lerp(goalLook, dampK);
 
+  // Subtle organic camera breathing for cozy indie-game feel (smooth, no dizziness)
+  const camFloatY = (!PL.on && !mv.on) ? Math.sin(elapsed * 0.45) * 0.22 : 0;
+
   cam.position.set(
     targetLook.x + Math.sin(curCam.az) * Math.cos(curCam.pl) * curCam.dist,
-    targetLook.y + Math.sin(curCam.pl) * curCam.dist,
+    targetLook.y + Math.sin(curCam.pl) * curCam.dist + camFloatY,
     targetLook.z + Math.cos(curCam.az) * Math.cos(curCam.pl) * curCam.dist
   );
   cam.lookAt(targetLook);

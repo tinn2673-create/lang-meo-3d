@@ -1,8 +1,8 @@
 # 🐾 TT Trung Tín – Làng 3D & Mèo Chibi Animation
 
 <p align="center">
-  <b>Thế giới 3D tương tác mô phỏng Làng Mèo huyền ảo chạy trực tiếp trên trình duyệt web</b><br>
-  <i>Xây dựng bằng Three.js (WebGL) • Thiết kế dựa trên concept 3D nguyên gốc • Chạy trực tiếp không cần cài đặt</i>
+  <b>Thế giới 3D Cozy Game World mang phong cách Indie Cinematic Night huyền ảo</b><br>
+  <i>Xây dựng bằng Three.js (WebGL) • Ánh sáng Dreamy Purple & Blue • Giao diện Glassmorphism cao cấp • 60 FPS mượt mà</i>
 </p>
 
 <p align="center">
@@ -18,6 +18,22 @@
 > 💡 **Khám phá mô hình 3D chạy trực tuyến tại:**  
 > 👉 **[https://tinn2673-create.github.io/lang-meo-3d/](https://tinn2673-create.github.io/lang-meo-3d/)**  
 > *(Hỗ trợ mượt mà trên cả máy tính, laptop, máy tính bảng và điện thoại di động).*
+
+---
+
+## 🎨 Điểm nhấn Nghệ thuật & Công nghệ (Art & Tech Highlights)
+
+* **🌌 Cinematic Night Environment (Môi trường đêm huyền ảo):**
+  * Tông màu chủ đạo **Dreamy Purple & Blue** kết hợp ánh trăng bạc oải hương (`Lavender Moonlight`) và ánh sáng viền xanh teal (`Cyan/Teal Rim Lighting`).
+  * Bầu trời đa tầng với **Celestial Sky Dome** chuyển sắc từ tím vũ trụ đến xanh đêm chân trời, điểm xuyết các chòm sao lấp lánh và cụm mây trôi lững lờ.
+  * Hạt bụi sao nhiệm màu (**Cosmic Stardust**) và đom đóm lơ lửng, tạo chiều sâu thị giác sống động như một tựa game indie cao cấp.
+* **📷 Góc nhìn Camera & Bố cục cân đối:**
+  * Khung hình Isometric điện ảnh bao trọn 100% hòn đảo bay, không bị cắt xén bất cứ công trình nào trên mọi tỉ lệ màn hình desktop hay mobile.
+  * Hiệu ứng thở nhẹ nhàng của máy quay (**Cinematic Camera Breathing**) mang lại cảm giác thế giới đang sống thực sự.
+* **🌀 Cổng không gian Stargate êm dịu:**
+  * Lốc xoáy năng lượng kép 2 chiều (Cyan & Purple) với hiệu ứng phát quang mềm mại, loại bỏ hoàn toàn hiện tượng chói mắt hoặc cháy sáng.
+* **✨ Giao diện Glassmorphism Dock hiện đại:**
+  * Thanh điều khiển dạng dock kính mờ cao cấp với hiệu ứng ánh sáng neon tím hồng, nút **🎬 Phim ngắn** nổi bật tinh tế, bố cục responsive không che khuất mô hình.
 
 ---
 
