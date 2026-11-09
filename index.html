@@ -1022,45 +1022,36 @@ function buildMarketStall(x, z, ry) {
 buildMarketStall(19.0, -4.5, -0.45);
 
 /* ====================================================================
-   2.3. CẦU ĐÁ VÒM CỔ ĐIỂN QUA SUỐI (Arched Stone Bridge)
+   2.3. CẦU GỖ NHỎ XINH BẮC QUA SUỐI (Cozy Petite Garden Footbridge)
 ==================================================================== */
-function buildStoneBridge(x, z, ry) {
+function buildSmallBridge(x, z, ry) {
   const g = grp(x, 0, z, ry);
+  const w = 1.6, d = 3.8; // Compact & slender design
 
-  // Arched Cobblestone Span
-  const deck = bx(g, 3.4, 0.45, 6.2, 0x828294, 0, 1.1, 0);
-  // Stepped ramp slopes at ends
-  const rampF = bx(g, 3.4, 0.35, 2.0, 0x828294, 0, 0.55, 3.6); rampF.rotation.x = -0.25;
-  const rampB = bx(g, 3.4, 0.35, 2.0, 0x828294, 0, 0.55, -3.6); rampB.rotation.x = 0.25;
+  // Gentle low-arch stone and timber deck
+  const deck = bx(g, w, 0.22, d, 0x8b5a2b, 0, 0.42, 0);
+  // Gentle slope approach ramps at ends
+  const rampF = bx(g, w, 0.16, 1.1, 0x8b5a2b, 0, 0.24, d / 2 + 0.45); rampF.rotation.x = -0.22;
+  const rampB = bx(g, w, 0.16, 1.1, 0x8b5a2b, 0, 0.24, -d / 2 - 0.45); rampB.rotation.x = 0.22;
 
-  // Stone Balustrade & Railings
-  [-1.6, 1.6].forEach(side => {
-    // Top handrail
-    bx(g, 0.25, 0.2, 6.2, 0x606075, side, 1.8, 0);
-    // Stone baluster pillars
-    for (let pz = -2.8; pz <= 2.8; pz += 1.4) {
-      cy(g, 0.14, 0.65, 0x6e6e88, side, 1.45, pz);
-    }
+  // Delicate low wooden railings
+  [-w / 2, w / 2].forEach(side => {
+    // Handrail
+    bx(g, 0.08, 0.1, d + 1.2, 0x5a361e, side, 0.85, 0);
+    // 4 Corner baluster posts
+    [-d / 2 - 0.4, -d / 4, d / 4, d / 2 + 0.4].forEach(pz => {
+      cy(g, 0.06, 0.75, 0x6b4528, side, 0.55, pz);
+      sp(g, 0.08, 0x5a361e, side, 0.95, pz); // round post cap
+    });
   });
 
-  // Hanging Wrought-Iron Lantern in center of bridge
-  sp(g, 0.16, GLW(0xffd166), 0, 2.5, 0);
-  glow(g, 0, 2.5, 0, 0xffb84d, 2.8);
-
-  // Cat Paw Banner on bridge side
-  const btx = cvText(96, 128, ctx => {
-    ctx.fillStyle = '#2563eb';
-    ctx.fillRect(0, 0, 96, 128);
-    ctx.fillStyle = '#fff';
-    ctx.font = '40px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('🐾', 48, 70);
-  });
-  add(g, new T.PlaneGeometry(0.8, 1.1), new T.MeshBasicMaterial({ map: btx, side: T.DoubleSide }), 1.76, 1.1, 0);
+  // Cute warm fairy lantern at bridge entrance
+  sp(g, 0.12, GLW(0xffd166), w / 2 + 0.15, 0.95, -d / 2 - 0.4);
+  glow(g, w / 2 + 0.15, 0.95, -d / 2 - 0.4, 0xffb84d, 2.0);
 
   return g;
 }
-buildStoneBridge(-10.5, 7.8, 0.25);
+buildSmallBridge(-11.5, 7.2, 0.35);
 
 /* ====================================================================
    2.4. ĐỒ VẬT & TRANG TRÍ ĐƯỜNG PHỐ LÀNG MÈO (Props & Street Furniture)
@@ -1492,6 +1483,157 @@ wtTex.wrapS = wtTex.wrapT = T.RepeatWrapping;
     fish2.rotation.y = Math.PI;
   });
 })();
+
+
+/* ====================================================================
+   4.1. MÂY BỒNG BỀNH VÀ ĐÀN CHIM BAY LƯỢN (Clouds & Flying Birds)
+==================================================================== */
+// 1. Anime-Style Fluffy 3D Clouds (Cụm Mây Bồng Bềnh Trôi)
+const cloudGroup = new T.Group();
+S.add(cloudGroup);
+const clouds = [];
+
+function createFluffyCloud(x, y, z, scale = 1, speed = 1.2) {
+  const cg = new T.Group();
+  cg.position.set(x, y, z);
+  cg.scale.setScalar(scale);
+  cloudGroup.add(cg);
+
+  const cloudMat = new T.MeshStandardMaterial({
+    color: 0xffffff,
+    roughness: 0.9,
+    metalness: 0.05,
+    transparent: true,
+    opacity: 0.88
+  });
+
+  // Intersecting spheres forming a billowy, fluffy cloud
+  const puffDefs = [
+    [0, 0, 0, 2.2, 1.4, 0.8, 1.1],
+    [1.6, -0.2, 0.3, 1.7, 1.2, 0.75, 1.0],
+    [-1.6, -0.2, -0.2, 1.6, 1.1, 0.75, 0.95],
+    [0.8, 0.6, -0.1, 1.5, 1.1, 0.8, 1.0],
+    [-0.7, 0.5, 0.2, 1.4, 1.0, 0.8, 0.9],
+    [0, -0.5, 0, 2.6, 1.6, 0.5, 1.2] // flat bottom puff
+  ];
+  puffDefs.forEach(([px, py, pz, r, sx, sy, sz]) => {
+    const p = add(cg, new T.SphereGeometry(r, 12, 10), cloudMat, px, py, pz);
+    p.scale.set(sx, sy, sz);
+  });
+
+  clouds.push({ g: cg, speed, startZ: z });
+}
+
+// Spawn 6 clouds drifting at different altitudes & depths
+createFluffyCloud(-45, 26, -20, 1.4, 1.1);
+createFluffyCloud(-15, 30, -35, 1.8, 0.8);
+createFluffyCloud(20, 24, -15, 1.2, 1.3);
+createFluffyCloud(-30, 22, 15, 1.3, 1.0);
+createFluffyCloud(5, 28, 25, 1.5, 0.9);
+createFluffyCloud(35, 25, 5, 1.1, 1.4);
+
+// 2. Flock of White Birds / Seagulls Flying Across the Sky (Đàn chim vỗ cánh)
+const birdGroup = new T.Group();
+S.add(birdGroup);
+const flock = [];
+
+function createBird(offsetX, offsetY, offsetZ, flapSpeed = 9.0) {
+  const bg = new T.Group();
+  birdGroup.add(bg);
+
+  const featherMat = M(0xffffff, 0, 0, 0.6, 0.1);
+  const beakMat = M(0xf59e0b, 0, 0, 0.4, 0.2);
+
+  // Sleek Aerodynamic Body
+  const body = add(bg, new T.SphereGeometry(0.18, 10, 8), featherMat, 0, 0, 0);
+  body.scale.set(0.65, 0.5, 1.4);
+
+  // Little Yellow Beak
+  const beak = add(bg, new T.ConeGeometry(0.06, 0.22, 4), beakMat, 0, -0.02, 0.72);
+  beak.rotation.x = Math.PI / 2;
+
+  // Left Wing with Flapping Joint
+  const lWingJoint = new T.Group();
+  lWingJoint.position.set(-0.1, 0.05, 0.05);
+  bg.add(lWingJoint);
+  const lWing = bx(lWingJoint, 0.82, 0.025, 0.38, featherMat, -0.42, 0, 0);
+  lWing.rotation.y = -0.15;
+
+  // Right Wing with Flapping Joint
+  const rWingJoint = new T.Group();
+  rWingJoint.position.set(0.1, 0.05, 0.05);
+  bg.add(rWingJoint);
+  const rWing = bx(rWingJoint, 0.82, 0.025, 0.38, featherMat, 0.42, 0, 0);
+  rWing.rotation.y = 0.15;
+
+  // Fan Tail
+  const tail = bx(bg, 0.28, 0.02, 0.42, featherMat, 0, 0.04, -0.75);
+  tail.rotation.x = -0.12;
+
+  flock.push({
+    g: bg,
+    lWing: lWingJoint,
+    rWing: rWingJoint,
+    ox: offsetX,
+    oy: offsetY,
+    oz: offsetZ,
+    flapSpeed,
+    phase: R2() * Math.PI * 2
+  });
+}
+
+// Create a graceful flock of 5 birds flying in V-formation
+const vFormation = [
+  [0, 0, 0, 9.2],       // Leader
+  [-1.8, -0.3, -1.6, 8.8], // Left wing 1
+  [1.8, 0.2, -1.6, 9.0],  // Right wing 1
+  [-3.4, -0.5, -3.2, 9.4], // Left wing 2
+  [3.4, -0.2, -3.2, 8.6]  // Right wing 2
+];
+vFormation.forEach(([ox, oy, oz, spd]) => createBird(ox, oy, oz, spd));
+
+// Sky Animation Loop (Clouds Drifting & Birds Flying in sweeping flight path)
+anim.push((t, dt) => {
+  // Drift clouds across sky and wrap around
+  clouds.forEach(c => {
+    c.g.position.x += dt * c.speed * 2.2;
+    if (c.g.position.x > 65) {
+      c.g.position.x = -65;
+      c.g.position.z = c.startZ + (Math.sin(t * 0.1) * 6);
+    }
+  });
+
+  // Birds flight path: swooping wide circular arc across the island
+  const flightRadius = 34;
+  const flightAngle = t * 0.32;
+  const leadX = Math.sin(flightAngle) * flightRadius;
+  const leadZ = Math.cos(flightAngle) * (flightRadius * 0.82);
+  const leadY = 18.0 + Math.sin(t * 0.7) * 2.5;
+
+  // Tangent angle for flight heading direction
+  const nextX = Math.sin(flightAngle + 0.05) * flightRadius;
+  const nextZ = Math.cos(flightAngle + 0.05) * (flightRadius * 0.82);
+  const heading = Math.atan2(nextX - leadX, nextZ - leadZ);
+
+  flock.forEach((b, idx) => {
+    // Position within formation
+    b.g.position.set(
+      leadX + Math.cos(heading) * b.ox - Math.sin(heading) * b.oz,
+      leadY + b.oy + Math.sin(t * 3.5 + b.phase) * 0.15,
+      leadZ + Math.sin(heading) * b.ox + Math.cos(heading) * b.oz
+    );
+    b.g.rotation.set(
+      -Math.sin(t * 0.7) * 0.08, // gentle pitch
+      heading,
+      -Math.sin(flightAngle) * 0.25 // banking into turn
+    );
+
+    // Realistic bird wing flapping animation
+    const flap = Math.sin(t * b.flapSpeed + b.phase);
+    b.lWing.rotation.z = flap * 0.65;
+    b.rWing.rotation.z = -flap * 0.65;
+  });
+});
 
 /* ====================================================================
    4. NATURE, SAKURA TREES & PARTICLES
@@ -2082,7 +2224,7 @@ const CAM_VIEWS = {
   v4: [16, 2, 4, 24, 0.32, -0.6],
   v5: [-18.5, 2.2, -4.5, 16, 0.28, 0.4],
   v6: [19.0, 2.0, -4.5, 16, 0.28, -0.4],
-  v7: [-10.5, 2.0, 7.8, 16, 0.26, 0.1]
+  v7: [-11.5, 1.8, 7.2, 13, 0.24, 0.2]
 };
 Object.keys(CAM_VIEWS).forEach(k => {
   $('#' + k).onclick = () => {

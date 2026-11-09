@@ -58,18 +58,19 @@
 1. **Biệt thự TT Trung Tín (Main Villa):** Nhà gỗ 2 tầng phong cách châu Âu, móng đá kiên cố, mái ngói xanh tím, ống khói bốc khói nhẹ, cửa sổ sáng đèn ấm áp, bồn hoa rực rỡ và biển hiệu vương miện TT phát sáng.
 2. **Tiệm Bánh & Cà Phê Mèo (Meow Cafe & Bakery):** Nhà phong cách cottage ấm cúng với mái hiên sọc đỏ trắng, cửa vòm kính trưng bày bánh ngọt phát sáng, biển hiệu `🐾 MEOW CAFE & BAKERY`, bàn ghế ngoài trời có ô che và chiếc xe tay ga retro hồng xinh xắn.
 3. **Quầy Hàng Chợ Quê (Village Market Stall):** Quầy gỗ mộc có mái che sọc vàng xanh, các hòm gỗ đựng táo đỏ, cam vàng, cá tươi cho mèo, bảng phấn `100% ORGANIC` và đèn lồng ấm cúng.
-4. **Cầu Đá Vòm Cổ (Arched Stone Bridge):** Cây cầu đá uốn cong bắc qua con suối hoa đào với lan can chạm khắc, đèn lồng treo lơ lửng và cờ biểu tượng chân mèo.
-5. **Gara & Sân thượng thư giãn:** Có siêu xe thể thao, sân thượng có bàn ghế và dù che nắng; biển quảng cáo hologram mèo phát sáng `</>`.
-6. **Robot Mèo AI Trợ Lý Mini (Bip-Bip 🤖):** Chú robot tròn vo bay lơ lửng trên không, có 2 tai mèo ăng-ten phát sáng và màn hình hiển thị biểu cảm mèo điện tử `(^•ω•^)`, luôn bay lượn hộ tống người chơi.
-7. **Đồ vật & Đồ chơi làng mèo:** Hệ thống cột đèn đường Victoria thắp sáng ban đêm, ghế băng công viên thư giãn, cây cào móng mèo 3 tầng có chuột đồ chơi treo đung đưa, và chiếc ổ đệm tai mèo nơ hồng có chú mèo con đang ngủ say `💤`.
-8. **Drone giao hàng (Delivery Drone):** Quadcopter 4 cánh quạt quay tít bay lượn trên bầu trời, chở thùng hàng gỗ.
-9. **Cổng không gian Stargate (Magic Portal):** Vòng đá cổ ngữ với lốc xoáy năng lượng xanh phát sáng kỳ ảo. **Đặc biệt:** Bạn có thể điều khiển chú mèo (dù đang đi bộ, đạp xe hay lái xe) bước vào cổng để **dịch chuyển tức thời** sang bên kia hòn đảo!
-10. **Thác nước & Hồ cá chép:** Vách đá có dòng thác đổ xuống hồ nước trong xanh, hoa súng bập bềnh và cá chép vàng nhảy vọt lên mặt nước.
-11. **Tháp quan sát thiên văn:** Tháp đá cổ kính có mái vòm xanh và kính viễn vọng hướng lên các vì sao.
-12. **Cối xay gió & Guồng nước:** Cánh quạt cối xay gió khổng lồ và bánh xe nước quay đều bên dòng suối.
-13. **Cây hoa anh đào (Sakura) & Hiệu ứng thời tiết:** Cây hoa anh đào rực rỡ với hàng trăm cánh hoa hồng rơi lững lờ theo gió cùng đàn đom đóm phát sáng về đêm.
-14. **Chuyển đổi Ngày / Đêm:** Bấm nút **🌙 Đêm / ☀️ Ngày** để chiêm ngưỡng làng trong ánh nắng ấm ban ngày hoặc ánh neon lung linh về đêm.
-15. **Chụp ảnh Full HD (Photo Mode):** Bấm nút **📸 Chụp ảnh** góc trên để chụp và tải ngay bức ảnh 3D tuyệt đẹp về máy tính hoặc điện thoại!
+4. **Cầu Gỗ Nhỏ Xinh Bắc Qua Suối (Petite Garden Footbridge):** Cây cầu gỗ nhỏ nhắn uốn cong duyên dáng bắc qua dòng suối hoa đào với lan can gỗ mộc thanh thoát và đèn lồng ấm cúng ở đầu cầu.
+5. **Mây Bồng Bềnh & Đàn Chim Bay Lượn (Clouds & Flying Birds):** Những cụm mây trắng bồng bềnh phong cách anime trôi lững lờ trên nền trời, cùng đàn chim hải âu vỗ cánh chao liệng theo đội hình chữ V quanh hòn đảo bay.
+6. **Gara & Sân thượng thư giãn:** Có siêu xe thể thao, sân thượng có bàn ghế và dù che nắng; biển quảng cáo hologram mèo phát sáng `</>`.
+7. **Robot Mèo AI Trợ Lý Mini (Bip-Bip 🤖):** Chú robot tròn vo bay lơ lửng trên không, có 2 tai mèo ăng-ten phát sáng và màn hình hiển thị biểu cảm mèo điện tử `(^•ω•^)`, luôn bay lượn hộ tống người chơi.
+8. **Đồ vật & Đồ chơi làng mèo:** Hệ thống cột đèn đường Victoria thắp sáng ban đêm, ghế băng công viên thư giãn, cây cào móng mèo 3 tầng có chuột đồ chơi treo đung đưa, và chiếc ổ đệm tai mèo nơ hồng có chú mèo con đang ngủ say `💤`.
+9. **Drone giao hàng (Delivery Drone):** Quadcopter 4 cánh quạt quay tít bay lượn trên bầu trời, chở thùng hàng gỗ.
+10. **Cổng không gian Stargate (Magic Portal):** Vòng đá cổ ngữ với lốc xoáy năng lượng xanh phát sáng kỳ ảo. **Đặc biệt:** Bạn có thể điều khiển chú mèo (dù đang đi bộ, đạp xe hay lái xe) bước vào cổng để **dịch chuyển tức thời** sang bên kia hòn đảo!
+11. **Thác nước & Hồ cá chép:** Vách đá có dòng thác đổ xuống hồ nước trong xanh, hoa súng bập bềnh và cá chép vàng nhảy vọt lên mặt nước.
+12. **Tháp quan sát thiên văn:** Tháp đá cổ kính có mái vòm xanh và kính viễn vọng hướng lên các vì sao.
+13. **Cối xay gió & Guồng nước:** Cánh quạt cối xay gió khổng lồ và bánh xe nước quay đều bên dòng suối.
+14. **Cây hoa anh đào (Sakura) & Hiệu ứng thời tiết:** Cây hoa anh đào rực rỡ với hàng trăm cánh hoa hồng rơi lững lờ theo gió cùng đàn đom đóm phát sáng về đêm.
+15. **Chuyển đổi 3 Chế độ Thời Tiết:** Bấm nút **☀️ Ban Ngày / 🌅 Hoàng Hôn / 🌙 Đêm Neon** để chiêm ngưỡng làng trong ánh nắng rực rỡ, ánh chiều tà hoàng hôn lãng mạn hoặc ánh neon lung linh về đêm.
+16. **Chụp ảnh Full HD (Photo Mode):** Bấm nút **📸 Chụp ảnh** góc trên để chụp và tải ngay bức ảnh 3D tuyệt đẹp về máy tính hoặc điện thoại!
 
 ---
 
